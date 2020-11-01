@@ -1,4 +1,4 @@
-#include "ScriptPCH.h"
+#include "ScriptMgr.h"
 #include "EscortAI.h"
 
 #define GOSSIP_RALIQ            "You owe Sim'salabim money. Hand them over or die!"

@@ -1,4 +1,4 @@
-#include "ScriptPCH.h"
+#include "ScriptMgr.h"
 #include "EscortAI.h"
 
 enum CaptainTyralius

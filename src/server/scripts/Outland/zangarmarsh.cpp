@@ -1,4 +1,4 @@
-#include "ScriptPCH.h"
+#include "ScriptMgr.h"
 #include "EscortAI.h"
 
 #define GOSSIP_ITEM_BLESS_ASH     "Grant me your mark, wise ancient."

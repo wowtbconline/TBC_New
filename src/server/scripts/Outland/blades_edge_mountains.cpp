@@ -1,4 +1,4 @@
-#include "ScriptPCH.h"
+#include "ScriptMgr.h"
 
 class go_fel_crystal_prism : public GameObjectScript
 {
