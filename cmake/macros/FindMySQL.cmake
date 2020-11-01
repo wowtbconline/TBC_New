@@ -89,6 +89,7 @@ find_path(MYSQL_INCLUDE_DIR
     "$ENV{ProgramFiles}/MySQL/*/include"
     "$ENV{SystemDrive}/MySQL/*/include"
     "c:/msys/local/include"
+    "E:/mysql-5.7.20-winx64/include"
   DOC
     "Specify the directory containing mysql.h."
 )
@@ -116,6 +117,7 @@ if( WIN32 )
       libmysql
     PATHS
       ${MYSQL_ADD_LIBRARIES_PATH}
+      "E:/mysql-5.7.20-winx64/lib/"
       "C:/Program Files/MySQL/MySQL Server 5.6/lib/opt"
       "C:/Program Files/MySQL/MySQL Server 5.5/lib/opt"
       "C:/Program Files/MySQL/MySQL Server 5.1/lib/opt"
