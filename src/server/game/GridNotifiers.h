@@ -1000,11 +1000,12 @@ namespace Trinity
     class TC_GAME_API AnyPlayerInObjectRangeCheck
     {
     public:
-        AnyPlayerInObjectRangeCheck(WorldObject const* obj, float range) : i_obj(obj), i_range(range) {}
+        AnyPlayerInObjectRangeCheck(WorldObject const* obj, float range, bool reqAlive = true) : _obj(obj), _range(range), _reqAlive(reqAlive) { }
         bool operator()(Player* u);
     private:
-        WorldObject const* i_obj;
-        float i_range;
+        WorldObject const* _obj;
+        float _range;
+        bool _reqAlive;
     };
 
     class TC_GAME_API NearestPlayerInObjectRangeCheck
