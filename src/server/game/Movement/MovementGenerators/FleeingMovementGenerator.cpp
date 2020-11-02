@@ -14,9 +14,9 @@
 #define MAX_QUIET_DISTANCE 43.0f
 
 template<class T>
-FleeingMovementGenerator<T>::FleeingMovementGenerator(ObjectGuid fleeTargetGUID) :
+FleeingMovementGenerator<T>::FleeingMovementGenerator(ObjectGuid fleeTargetGUID, bool reducedSpeed/* = false*/) :
     MovementGeneratorMedium<T, FleeingMovementGenerator<T>>(MOTION_MODE_DEFAULT, MOTION_PRIORITY_HIGHEST, UNIT_STATE_FLEEING),
-    _fleeTargetGUID(fleeTargetGUID), i_nextCheckTime(0) 
+    _fleeTargetGUID(fleeTargetGUID), i_nextCheckTime(0), _reducedSpeed(reducedSpeed)
 { }
 
 template<class T>
@@ -67,6 +67,8 @@ void FleeingMovementGenerator<T>::SetTargetLocation(T* owner)
     Movement::MoveSplineInit init(owner);
     init.MovebyPath(_path->GetPath(), 0, ownerTransport);
     init.SetWalk(false);
+    if (_reducedSpeed)
+        init.SetVelocity(owner->GetSpeed(MOVE_RUN) * 0.66f);
     int32 traveltime = init.Launch();
     i_nextCheckTime.Reset(traveltime + urand(800, 1500));
 
@@ -200,8 +202,8 @@ void FleeingMovementGenerator<Creature>::DoFinalize(Creature* owner, bool active
     }
 }
 
-template FleeingMovementGenerator<Player>::FleeingMovementGenerator(ObjectGuid);
-template FleeingMovementGenerator<Creature>::FleeingMovementGenerator(ObjectGuid);
+template FleeingMovementGenerator<Player>::FleeingMovementGenerator(ObjectGuid, bool);
+template FleeingMovementGenerator<Creature>::FleeingMovementGenerator(ObjectGuid, bool);
 template MovementGeneratorType FleeingMovementGenerator<Player>::GetMovementGeneratorType() const;
 template MovementGeneratorType FleeingMovementGenerator<Creature>::GetMovementGeneratorType() const;
 template bool FleeingMovementGenerator<Player>::DoInitialize(Player*);

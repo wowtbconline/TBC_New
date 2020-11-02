@@ -9,7 +9,7 @@ template<class T>
 class TC_GAME_API FleeingMovementGenerator : public MovementGeneratorMedium< T, FleeingMovementGenerator<T> >
 {
     public:
-        explicit FleeingMovementGenerator(ObjectGuid fleeTargetGUID);
+        explicit FleeingMovementGenerator(ObjectGuid fleeTargetGUID, bool reducedSpeed);
 
         bool DoInitialize(T*);
         void DoReset(T*);
@@ -26,14 +26,15 @@ class TC_GAME_API FleeingMovementGenerator : public MovementGeneratorMedium< T, 
 
         ObjectGuid _fleeTargetGUID;
         TimeTracker i_nextCheckTime;
+        bool _reducedSpeed;
         std::unique_ptr<PathGenerator> _path;
 };
 
 class TC_GAME_API TimedFleeingMovementGenerator : public FleeingMovementGenerator<Creature>
 {
     public:
-        TimedFleeingMovementGenerator(ObjectGuid fright, uint32 time) :
-            FleeingMovementGenerator<Creature>(fright),
+        TimedFleeingMovementGenerator(ObjectGuid fright, uint32 time, bool reducedSpeed) :
+            FleeingMovementGenerator<Creature>(fright, reducedSpeed),
             _totalFleeTime(time) { }
 
         bool Update(Unit*, uint32) override;
