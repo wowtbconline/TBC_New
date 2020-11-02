@@ -803,7 +803,7 @@ public:
                         if(!fleeing)
                         {
                             me->GetThreatManager().ResetAllThreat();
-                            me->GetMotionMaster()->MoveFleeing(player);
+                            me->GetMotionMaster()->MoveFleeing(player, 0, true);
                             fleeing = true;
                         }
                     }

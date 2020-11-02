@@ -324,7 +324,7 @@ public:
                 DoCast(me, SPELL_HEAD, false);
                 SaySound(SAY_LOST_HEAD);
                 me->GetMotionMaster()->Clear();
-                me->GetMotionMaster()->MoveFleeing(caster->GetVictim());
+                me->GetMotionMaster()->MoveFleeing(caster->GetVictim(), 0, false);
             }
         }
 
@@ -339,7 +339,7 @@ public:
                     if (!me->GetVictim())
                         return;
                     me->GetMotionMaster()->Clear();
-                    me->GetMotionMaster()->MoveFleeing(me->GetVictim());
+                    me->GetMotionMaster()->MoveFleeing(me->GetVictim(), 0, false);
                 }
                 else wait -= diff;
 
