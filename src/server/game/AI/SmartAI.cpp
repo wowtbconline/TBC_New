@@ -409,6 +409,8 @@ void SmartAI::UpdateAI(const uint32 diff)
     CheckConditions(diff);
 #endif
 
+    bool hasVictim = UpdateVictim();
+
     GetScript()->OnUpdate(diff);
 
     UpdatePath(diff);
@@ -422,7 +424,7 @@ void SmartAI::UpdateAI(const uint32 diff)
         return;
     }
 
-    if (!UpdateVictim())
+    if (!hasVictim)
         return;
 
     if (mCanAutoAttack)
