@@ -817,7 +817,7 @@ class TC_GAME_API Creature : public Unit, public GridObject<Creature>, public Ma
             if(IsPet())
                 return false;
 
-            return GetCreatureTemplate()->IsWorldBoss();
+            return GetCreatureTemplate()->rank == CREATURE_ELITE_WORLDBOSS;
         }
         bool IsGuard() const override { return (m_creatureInfo->flags_extra & CREATURE_FLAG_EXTRA_GUARD) != 0; }
 
@@ -836,6 +836,7 @@ class TC_GAME_API Creature : public Unit, public GridObject<Creature>, public Ma
         void WarnDeathToFriendly();
 
         CreatureAI* AI() const { return reinterpret_cast<CreatureAI*>(GetAI()); }
+		uint32 _GetCreatureElite(int32 rank);
 
         uint32 GetShieldBlockValue() const override                  //dunno mob block value
         {
@@ -869,6 +870,9 @@ class TC_GAME_API Creature : public Unit, public GridObject<Creature>, public Ma
 
         int8 GetOriginalEquipmentId() const { return m_originalEquipmentId; }
         uint32 GetCurrentEquipmentId() { return m_equipmentId; }
+		static float _GetHealthMod(int32 rank);             ///< Get custom factor to scale health (default 1, CONFIG_FLOAT_RATE_CREATURE_*_HP)
+		static float _GetDamageMod(int32 rank);             ///< Get custom factor to scale damage (default 1, CONFIG_FLOAT_RATE_*_DAMAGE)
+		static float _GetSpellDamageMod(int32 rank);        ///< Get custom factor to scale spell damage (default 1, CONFIG_FLOAT_RATE_*_SPELLDAMAGE)
         void SetCurrentEquipmentId(uint8 id) { m_equipmentId = id; }
 
         VendorItemData const* GetVendorItems() const;

@@ -1423,10 +1423,15 @@ void Creature::UpdateLevelDependantStats()
 {
     CreatureTemplate const* cInfo = GetCreatureTemplate();
     // uint32 rank = IsPet() ? 0 : cInfo->rank;
+	uint32 rank = IsPet() ? 0 : cInfo->rank;
+	uint8 level = GetLevel();
     CreatureBaseStats const* stats = sObjectMgr->GetCreatureBaseStats(GetLevel(), cInfo->unit_class);
 
     // health
-    uint32 health = stats->GenerateHealth(cInfo);
+ //   uint32 health = stats->GenerateHealth(cInfo);
+	float healthmod = _GetHealthMod(rank);
+	uint32 basehp = stats->GenerateHealth(cInfo);
+	uint32 health = uint32(basehp * healthmod);
 
     SetCreateHealth(health);
     SetMaxHealth(health);
@@ -1675,19 +1680,76 @@ void Creature::LoadEquipment(int8 id, bool force)
     }
 }
 
+float Creature::_GetHealthMod(int32 rank)
+{
+	switch (rank)                                           // define rates for each elite rank
+	{
+	case CREATURE_ELITE_NORMAL:
+		return sWorld->GetRate(RATE_CREATURE_NORMAL_HP);
+	case CREATURE_ELITE_ELITE:
+		return sWorld->GetRate(RATE_CREATURE_ELITE_ELITE_HP);
+	case CREATURE_ELITE_RAREELITE:
+		return sWorld->GetRate(RATE_CREATURE_ELITE_RAREELITE_HP);
+	case CREATURE_ELITE_WORLDBOSS:
+		return sWorld->GetRate(RATE_CREATURE_ELITE_WORLDBOSS_HP);
+	case CREATURE_ELITE_RARE:
+		return sWorld->GetRate(RATE_CREATURE_ELITE_RARE_HP);
+	default:
+		return sWorld->GetRate(RATE_CREATURE_ELITE_ELITE_HP);
+	}
+}
+
+float Creature::_GetDamageMod(int32 rank)
+{
+	switch (rank)                                           // define rates for each elite rank
+	{
+	case CREATURE_ELITE_NORMAL:
+		return sWorld->GetRate(RATE_CREATURE_NORMAL_DAMAGE);
+	case CREATURE_ELITE_ELITE:
+		return sWorld->GetRate(RATE_CREATURE_ELITE_ELITE_DAMAGE);
+	case CREATURE_ELITE_RAREELITE:
+		return sWorld->GetRate(RATE_CREATURE_ELITE_RAREELITE_DAMAGE);
+	case CREATURE_ELITE_WORLDBOSS:
+		return sWorld->GetRate(RATE_CREATURE_ELITE_WORLDBOSS_DAMAGE);
+	case CREATURE_ELITE_RARE:
+		return sWorld->GetRate(RATE_CREATURE_ELITE_RARE_DAMAGE);
+	default:
+		return sWorld->GetRate(RATE_CREATURE_ELITE_ELITE_DAMAGE);
+	}
+}
+
+float Creature::_GetSpellDamageMod(int32 rank)
+{
+	switch (rank)                                           // define rates for each elite rank
+	{
+	case CREATURE_ELITE_NORMAL:
+		return sWorld->GetRate(RATE_CREATURE_NORMAL_SPELLDAMAGE);
+	case CREATURE_ELITE_ELITE:
+		return sWorld->GetRate(RATE_CREATURE_ELITE_ELITE_SPELLDAMAGE);
+	case CREATURE_ELITE_RAREELITE:
+		return sWorld->GetRate(RATE_CREATURE_ELITE_RAREELITE_SPELLDAMAGE);
+	case CREATURE_ELITE_WORLDBOSS:
+		return sWorld->GetRate(RATE_CREATURE_ELITE_WORLDBOSS_SPELLDAMAGE);
+	case CREATURE_ELITE_RARE:
+		return sWorld->GetRate(RATE_CREATURE_ELITE_RARE_SPELLDAMAGE);
+	default:
+		return sWorld->GetRate(RATE_CREATURE_ELITE_ELITE_SPELLDAMAGE);
+	}
+}
+
 void Creature::SetSpawnHealth()
 {
     uint32 curhealth;
     if (m_creatureData && !m_regenHealth)
     {
         curhealth = m_creatureData->curhealth;
-        /*
+
         if (curhealth)
         {
             curhealth = uint32(curhealth * _GetHealthMod(GetCreatureTemplate()->rank));
             if (curhealth < 1)
                 curhealth = 1;
-        }*/
+        }
         SetPower(POWER_MANA, m_creatureData->curmana);
     }
     else
@@ -1697,6 +1759,21 @@ void Creature::SetSpawnHealth()
     }
 
     SetHealth((m_deathState == ALIVE || m_deathState == JUST_RESPAWNED) ? curhealth : 0);
+}
+
+uint32 Creature::_GetCreatureElite(int32 rank)
+{
+	switch (rank)
+	{
+	case CREATURE_ELITE_NORMAL:return sWorld->getConfig(CONFIG_UINT32_CREATURE_ELITE_NORMAL);
+	case CREATURE_ELITE_ELITE:return sWorld->getConfig(CREATURE_ELITE_ELITE_ELITE);
+	case CREATURE_ELITE_RAREELITE:return sWorld->getConfig(CREATURE_ELITE_RAREELITE_RAREELITE);
+	case CREATURE_ELITE_WORLDBOSS:return sWorld->getConfig(CREATURE_ELITE_WORLDBOSS_WORLDBOSS);
+	case CREATURE_ELITE_RARE:return sWorld->getConfig(CREATURE_ELITE_RARE_RARE);
+	default:
+		break;
+	}
+	return 10;
 }
 
 void Creature::SetWeapon(WeaponSlot slot, uint32 displayid, ItemSubclassWeapon subclass, InventoryType inventoryType)
