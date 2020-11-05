@@ -70,7 +70,7 @@ public:
 
         void SpellHit(Unit* Caster, const SpellInfo* Spell)
         {
-            //if (Spell->SpellFamilyFlags[2] & 0x080000000)
+           if (Spell->Id == 28880)
             {
                 me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PVP);
                 me->SetStandState(UNIT_STAND_STATE_STAND);
