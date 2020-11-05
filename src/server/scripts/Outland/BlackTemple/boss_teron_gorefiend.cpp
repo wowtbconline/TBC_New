@@ -156,7 +156,7 @@ class boss_teron_gorefiend : public CreatureScript
                     case EVENT_SPELL_CRUSHING_SHADOWS:
                         if (roll_chance_i(20))
                             Talk(SAY_CRUSHING);
-                        me->CastCustomSpell(SPELL_CRUSHING_SHADOWS, SPELLVALUE_MAX_TARGETS, 5, me, false);
+                        me->CastSpell(me, SPELL_CRUSHING_SHADOWS, SPELLVALUE_MAX_TARGETS);
                         events.ScheduleEvent(EVENT_SPELL_CRUSHING_SHADOWS, 15000);
                         break;
                     case EVENT_SPELL_SHADOW_OF_DEATH:

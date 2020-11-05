@@ -163,22 +163,6 @@ void Spell::EffectSummonType(uint32 effIndex)
             if (!_unitCaster)
                 return;
 
-            //fix minipet summon
-            if (m_caster && m_caster->GetTypeId() == TYPEID_PLAYER)
-            {
-                if (ObjectGuid minipet_guid = m_caster->ToPlayer()->GetCritterGUID())
-                {
-                    if (minipet_guid.GetEntry() == entry)
-                    {
-                        Unit* pet = ObjectAccessor::GetCreatureOrPetOrVehicle(*m_caster, minipet_guid);
-                        if (pet && pet->GetTypeId() == TYPEID_UNIT && pet->ToCreature()->IsSummon())
-                            pet->ToTempSummon()->UnSummon();
-
-                        return;
-                    }
-                }
-            }
-
             summon = m_caster->GetMap()->SummonCreature(entry, *destTarget, properties, duration, _unitCaster, m_spellInfo->Id);
             if (!summon || !summon->HasUnitTypeMask(UNIT_MASK_MINION))
                 return;

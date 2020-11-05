@@ -5,6 +5,8 @@
 #include "GameObject.h"
 #include "InstanceScript.h"
 #include "Map.h"
+#include "Unit.h"
+#include "Object.h"
 #include "ScriptedCreature.h"
 
 DoorData const doorData[] =
@@ -391,10 +393,10 @@ class spell_black_temple_charge_rage : public SpellScriptLoader
             PrepareAuraScript(spell_black_temple_charge_rage_AuraScript);
 
             void Update(AuraEffect const* effect)
-            {                
+            {
                 PreventDefaultAction();
-                if (Unit* target = GetUnitOwner()->SelectNearbyNoTotemTarget((Unit*)NULL, 50.0f))
-                    GetUnitOwner()->CastSpell(target, GetSpellInfo()->Effects[effect->GetEffIndex()].TriggerSpell, true);
+               if (Unit* target = GetUnitOwner()->SelectNearbyNoTotemTarget((Unit*)NULL, 50.0f))
+                   GetUnitOwner()->CastSpell(target, GetSpellInfo()->Effects[effect->GetEffIndex()].TriggerSpell, true);
             }
 
             void Register()
@@ -421,7 +423,7 @@ class spell_black_temple_shadow_inferno : public SpellScriptLoader
             void Update(AuraEffect const* effect)
             {                
                 PreventDefaultAction();
-                GetUnitOwner()->CastCustomSpell(SPELL_SHADOW_INFERNO_DAMAGE, SPELLVALUE_BASE_POINT0, effect->GetAmount(), GetUnitOwner(), TRIGGERED_FULL_MASK);
+                GetUnitOwner()->CastSpell(SPELL_SHADOW_INFERNO_DAMAGE, SPELLVALUE_BASE_POINT0, TRIGGERED_FULL_MASK);
                 GetAura()->GetEffect(effect->GetEffIndex())->SetAmount(effect->GetAmount()+500);
             }
 
@@ -464,7 +466,7 @@ class spell_black_temple_spell_absorption : public SpellScriptLoader
                 if (count == 0)
                     return;
 
-                GetUnitOwner()->CastCustomSpell(GetSpellInfo()->Effects[effect->GetEffIndex()].TriggerSpell, SPELLVALUE_BASE_POINT0, effect->GetAmount()*count, GetUnitOwner(), TRIGGERED_FULL_MASK);
+                GetUnitOwner()->CastSpell(GetSpellInfo()->Effects[effect->GetEffIndex()].TriggerSpell, SPELLVALUE_BASE_POINT0, TRIGGERED_FULL_MASK);
                 GetUnitOwner()->RemoveAurasDueToSpell(SPELL_CHAOTIC_CHARGE);
             }
 
@@ -522,7 +524,7 @@ class spell_black_temple_consuming_strikes : public SpellScriptLoader
             void HandleProc(AuraEffect const* /*aurEff*/, ProcEventInfo& eventInfo)
             {
                 PreventDefaultAction();
-                GetTarget()->CastCustomSpell(GetSpellInfo()->Effects[EFFECT_1].CalcValue(), SPELLVALUE_BASE_POINT0, eventInfo.GetDamageInfo()->GetDamage(), GetTarget(), true);
+                GetTarget()->CastSpell(GetSpellInfo()->Effects[EFFECT_1].CalcValue(), SPELLVALUE_BASE_POINT0, eventInfo.GetDamageInfo()->GetDamage());
             }
 
             void Register()

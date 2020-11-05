@@ -495,12 +495,15 @@ DeclinedNames = 0
 
 #
 #    StrictPlayerNames
-#        Limit player name to language specific symbols set, not allow create characters, and set rename request and disconnect at not allowed symbols name
+#        Limit player name to language specific symbols set, not allow create characters, and set rename request and 
+#  disconnect at not allowed symbols name
 #        Default: 0 disable (but limited server timezone dependent client check)
 #                 1 basic latin characters  (strict)
 #                 2 realm zone specific (strict). See RealmZone setting.
-#                   Note: In any case if you want correctly see character name at client this client must have apporopriate fonts
-#                   (included in client by default, with active official localization or custom localization fonts in clientdir/Fonts).
+#                   Note: In any case if you want correctly see character name at client this client must have apporopriate 
+#  fonts
+#                   (included in client by default, with active official localization or custom localization fonts in 
+#  clientdir/Fonts).
 #                 3 basic latin characters + server timezone specific
 #
 
@@ -508,12 +511,13 @@ StrictPlayerNames = 1
 
 #
 #    StrictCharterNames
-#        Limit guild/arena team charter names to language specific symbols set, not allow create charters with allowed symbols in name
+#        Limit guild/arena team charter names to language specific symbols set, not allow create charters with allowed symbols #  in name
 #        Default: 0 disable
 #                 1 basic latin characters  (strict)
 #                 2 realm zone specific (strict). See RealmZone setting.
-#                   Note: In any case if you want correctly see character name at client this client must have apporopriate fonts
-#                   (included in client by default, with active official localization or custom localization fonts in clientdir/Fonts).
+#                   Note: In any case if you want correctly see character name at client this client must have apporopriate  #  fonts
+#                   (included in client by default, with active official localization or custom localization fonts in  
+#  clientdir/Fonts).
 #                 3 basic latin characters + server timezone specific
 #
 
@@ -525,8 +529,10 @@ StrictCharterNames = 1
 #        Default: 0 disable
 #                 1 basic latin characters  (strict)
 #                 2 realm zone specific (strict). See RealmZone setting.
-#                   Note: In any case if you want correctly see character name at client this client must have apporopriate fonts
-#                   (included in client by default, with active official localization or custom localization fonts in clientdir/Fonts).
+#                   Note: In any case if you want correctly see character name at client this client must have apporopriate 
+#  fonts
+#                   (included in client by default, with active official localization or custom localization fonts in 
+#  clientdir/Fonts).
 #                 3 basic latin characters + server timezone specific
 #
 
@@ -564,7 +570,8 @@ CharactersPerRealm = 10
 
 #
 #    SkipCinematics
-#        Disable in-game script movie at first character's login(allows to prevent buggy intro in case of custom start location coordinates)
+#        Disable in-game script movie at first character's login(allows to prevent buggy intro in case of custom start 
+#  location coordinates)
 #        Default: 0 - show intro for each new characrer
 #                 1 - show intro only for first character of selected race
 #                 2 - disable intro show in all cases
@@ -640,7 +647,8 @@ InstantLogout = 1
 
 #
 #    GroupLeaderReconnectPeriod
-#        The time the leader of a group has to reconnect before the lead goes to another player (also applies for a server crash)
+#        The time the leader of a group has to reconnect before the lead goes to another player (also applies for a server 
+#  crash)
 #        Default: 180 (seconds)
 #
 
@@ -2634,7 +2642,8 @@ Debug.DisableGameObjectsLoading = 0
 
 #
 #    Debug.LogLastPackets
-#		  When activated, server will log last packets sent to client after its last response, then print those as errors if a client time out. Use this to debug client crashes. /!\ This dump packets as log entries with error level with filter "network.opcode", make sure this is logged somewhere.
+#		  When activated, server will log last packets sent to client after its last response, then print those as errors if #   a client time out. Use this to debug client crashes. /!\ This dump packets as log entries with error level with filter 
+#   "network.opcode", make sure this is logged somewhere.
 #        Default: 0
 #
 
@@ -2927,8 +2936,9 @@ Updates.AllowRehash = 1
 #
 #    Updates.CleanDeadRefMaxCount
 #        Description: Cleans dead/ orphaned references that occur if an update was removed or renamed and edited in one step.
-#                     It only starts the clean up if the count of the missing updates is below or equal the Updates.CleanDeadRefMaxCount value.
-#                     This way prevents erasing of the update history due to wrong source directory state (maybe wrong branch or bad revision).
+#                     It only starts the clean up if the count of the missing updates is below or equal the 
+#  Updates.CleanDeadRefMaxCount value.
+#                     This way prevents erasing of the update history due to wrong source directory state (maybe wrong branch #  or bad revision).
 #                     Disable this if you want to know if the database is in a possible "dirty state".
 #        Default:  3 - (Enabled)
 #                  0 - (Disabled)
@@ -2982,7 +2992,8 @@ Monitor.KeepDays = 90
 
 #
 #    Monitor.LagAlertThreshold.Count
-#        Description: Alert whenever world timediff is higher than Monitor.AbnormalDiff.World for LagAlertThreshold.Count consecutive times.
+#        Description: Alert whenever world timediff is higher than Monitor.AbnormalDiff.World for LagAlertThreshold.Count 
+#  consecutive times.
 #                     Setting any of these two values to 0 disable the alert.
 #		 Default: diff 400, count 10
 #
@@ -2991,7 +3002,7 @@ Monitor.LagAlertThreshold.Count = 10
 
 #
 #    Monitor.DynamicViewDist.Enable
-#        Description: Automatically adapt view distance for each map to reduce lag if update time for this map is higher than LagAlertThreshold.Diff for some time
+#        Description: Automatically adapt view distance for each map to reduce lag if update time for this map is higher than #  LagAlertThreshold.Diff for some time
 #        Default: 1 (enabled)
 #
 
@@ -3071,14 +3082,15 @@ Respawn.GuidWarnLevel = 12000000
 #        Description: This message will be periodically shown (Frequency specified by Respawn.WarningFrequency) to
 #                     all users of the server, once the Respawn.GuidWarnLevel has been passed, and a restart scheduled.
 #                     It's used to warn users that there will be an out of schedule server restart soon.
-#        Default: "There will be an unscheduled server restart at 03:00 server time. The server will be available again shortly after."
+#        Default: "There will be an unscheduled server restart at 03:00 server time. The server will be available again 
+#  shortly after."
 #
 
 Respawn.WarningMessage = "There will be an unscheduled server restart at 03:00. The server will be available again shortly after."
 
 #
 #    Respawn.WarningFrequency
-#        Description: The frequency (in seconds) that the warning message will be sent to users after a quiet time restart is triggered.
+#        Description: The frequency (in seconds) that the warning message will be sent to users after a quiet time restart is #  triggered.
 #                     The message will repeat each time this many seconds passed until the server is restarted.
 #                     If set to 0, no warnings will be sent.
 #        Default: 1800 - (30 minutes)
@@ -3129,7 +3141,8 @@ Respawn.DynamicMode = 1
 #    Respawn.DynamicEscortNPC
 #        Description: This switch controls the dynamic respawn system for escort NPCs not in instancable maps (base maps only).
 #                     This will cause the respawn timer to begin when an escort event begins, and potentially
-#                     allow multiple instances of the NPC to be alive at the same time (when combined with Respawn.DynamicMode > 0)
+#                     allow multiple instances of the NPC to be alive at the same time (when combined with 
+#  Respawn.DynamicMode > 0)
 #                 1 - Enabled
 #        Default: 0 - Disabled
 #
@@ -3140,7 +3153,8 @@ Respawn.DynamicEscortNPC = 1
 #    Respawn.DynamicRateCreature
 #        Description: The rate at which the respawn time is adjusted for high player counts in a zone (for creatures).
 #                     Up to this number of players, the respawn rate is unchanged.
-#                     At double this number in players, you get twice as many respawns, at three times this number, three times the respawns, and so forth.
+#                     At double this number in players, you get twice as many respawns, at three times this number, three 
+#  times the respawns, and so forth.
 #        Default: 15
 #
 
@@ -3158,7 +3172,8 @@ Respawn.DynamicMinimumCreature = 30
 #    Respawn.DynamicRateGameObject
 #        Description: The rate at which the respawn time is adjusted for high player counts in a zone (for gameobjects).
 #                     Up to this number of players, the respawn rate is unchanged.
-#                     At double this number in players, you get twice as many respawns, at three times this number, three times the respawns, and so forth.
+#                     At double this number in players, you get twice as many respawns, at three times this number, three 
+#  times the respawns, and so forth.
 #        Default: 15
 #
 
@@ -3192,7 +3207,8 @@ SaveRespawnTimeImmediately = 1
 #						x  - (Enabled and keep for x days)
 #						-1 - (Enabled and keep forever)
 #	DBLog.gm.*
-#		Description: This overrides the base variant for gm's only. If base variant is already enabled for a longer time, this has no effect.
+#		Description: This overrides the base variant for gm's only. If base variant is already enabled for a longer time, 
+#  this has no effect.
 #
 
 DBLog.bgstats = -1

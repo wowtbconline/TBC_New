@@ -303,7 +303,7 @@ public:
                     events.ScheduleEvent(EVENT_TAIL_LASH, 15000);
                     break;
                 case EVENT_WILD_MAGIC:
-                    me->CastCustomSpell(RAND(44978, 45001, 45002, 45004, 45006, 45010), SPELLVALUE_MAX_TARGETS, 1, me, false);
+                    me->CastSpell(RAND(44978, 45001, 45002, 45004, 45006, 45010), SPELLVALUE_MAX_TARGETS, false);
                     events.ScheduleEvent(EVENT_WILD_MAGIC, 20000);
                     break;
                 case EVENT_SPECTRAL_BLAST:
@@ -567,7 +567,7 @@ public:
                     events.ScheduleEvent(EVENT_SHADOW_BOLT, 9000);
                     break;
                 case EVENT_AGONY_CURSE:
-                    me->CastCustomSpell(SPELL_CURSE_OF_BOUNDLESS_AGONY, SPELLVALUE_MAX_TARGETS, 1, me, false);
+                    //me->CastSpell(SPELL_CURSE_OF_BOUNDLESS_AGONY, SPELLVALUE_MAX_TARGETS, 1, me, false);
                     events.ScheduleEvent(EVENT_AGONY_CURSE, 30000);
                     break;
                 case EVENT_CORRUPTION_STRIKE:
@@ -668,9 +668,9 @@ class spell_kalecgos_curse_of_boundless_agony : public SpellScriptLoader
 
             void OnRemove(AuraEffect const* aurEff, AuraEffectHandleModes /*mode*/)
             {
-                if (InstanceScript* instance = GetUnitOwner()->GetInstanceScript())
-                    if (instance->IsEncounterInProgress())
-                        GetUnitOwner()->CastCustomSpell(SPELL_CURSE_OF_BOUNDLESS_AGONY_PLR, SPELLVALUE_MAX_TARGETS, 1, GetUnitOwner(), true);
+				if (InstanceScript* instance = GetUnitOwner()->GetInstanceScript())
+					if (instance->IsEncounterInProgress())
+						GetUnitOwner()->CastSpell(SPELL_CURSE_OF_BOUNDLESS_AGONY_PLR, SPELLVALUE_MAX_TARGETS);
             }
 
             void OnPeriodic(AuraEffect const* aurEff)

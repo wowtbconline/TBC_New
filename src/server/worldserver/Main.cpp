@@ -1,7 +1,6 @@
 #include <openssl/opensslv.h>
 #include <openssl/crypto.h>
 #include <boost/asio/io_service.hpp>
-#include <boost/asio/deadline_timer.hpp>
 #include <boost/filesystem/path.hpp>
 #include <boost/filesystem/operations.hpp>
 #include <boost/program_options.hpp>
@@ -10,6 +9,7 @@
 #include "Common.h"
 #include "DatabaseEnv.h"
 #include "DatabaseLoader.h"
+#include "DeadlineTimer.h"
 #include "Config.h"
 #include "Log.h"
 #include "BigNumber.h"
@@ -58,13 +58,13 @@ namespace fs = boost::filesystem;
 // Format is YYYYMMDDRR where RR is the change in the conf file
 // for that day.
 #ifndef _TRINITY_CORE_CONFVER
-# define _TRINITY_CORE_CONFVER 2014060701
+# define _TRINITY_CORE_CONFVER 2020110701
 #endif //_TRINITY_CORE_CONFVER
 
 #ifdef WIN32
 #include "ServiceWin32.h"
-char serviceName[] = "Sunstriderd";
-char serviceLongName[] = "Sunstrider service";
+char serviceName[] = "wowtbc.online";
+char serviceLongName[] = "wowtbc.online service";
 char serviceDescription[] = "WoW 2.4.3 Server Emulator service";
 /*
  * -1 - not in service mode
@@ -90,7 +90,7 @@ public:
     static void Handler(std::weak_ptr<FreezeDetector> freezeDetectorRef, boost::system::error_code const& error);
 
 private:
-    boost::asio::deadline_timer _timer;
+    Trinity::Asio::DeadlineTimer _timer;
     uint32 _worldLoopCounter;
     uint32 _lastChangeMsTime;
     uint32 _maxCoreStuckTimeInMs;

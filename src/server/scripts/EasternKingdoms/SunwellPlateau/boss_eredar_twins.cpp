@@ -310,7 +310,7 @@ public:
                     events.ScheduleEvent(EVENT_SPELL_PYROGENICS, 15000);
                     break;
                 case EVENT_SPELL_FLAME_SEAR:
-                    me->CastCustomSpell(SPELL_FLAME_SEAR, SPELLVALUE_MAX_TARGETS, 5, me, TRIGGERED_NONE);
+                    me->CastSpell(me, SPELL_FLAME_SEAR, TRIGGERED_NONE);
                     events.ScheduleEvent(EVENT_SPELL_FLAME_SEAR, 15000);
                     break;
                 case EVENT_SPELL_BLAZE:

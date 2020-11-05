@@ -788,7 +788,6 @@ class npc_simon_bunny : public CreatureScript
                 std::list<WorldObject*> ClusterList;
                 Trinity::AllWorldObjectsInRange objects(me, searchDistance);
                 Trinity::WorldObjectListSearcher<Trinity::AllWorldObjectsInRange> searcher(me, ClusterList, objects);
-                me->VisitNearbyObject(searchDistance, searcher);
 
                 for(std::list<WorldObject*>::const_iterator i = ClusterList.begin(); i != ClusterList.end(); ++i)
                 {
@@ -1040,7 +1039,7 @@ class npc_simon_bunny : public CreatureScript
                 if(pSpell->Id == SPELL_BAD_PRESS_TRIGGER)
                 {
                     int32 bp = (int32)((float)(fails)*0.33f*pTarget->GetMaxHealth());
-                    pTarget->CastCustomSpell(pTarget, SPELL_BAD_PRESS_DAMAGE, &bp, NULL, NULL, true);
+                    pTarget->CastSpell(pTarget, SPELL_BAD_PRESS_DAMAGE);
                 }
             }
 

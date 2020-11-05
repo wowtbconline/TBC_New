@@ -123,7 +123,7 @@ class boss_morogrim_tidewalker : public CreatureScript
                         if (me->HealthAbovePct(25))
                         {
                             Talk(EMOTE_WATERY_GRAVE);
-                            me->CastCustomSpell(SPELL_WATERY_GRAVE, SPELLVALUE_MAX_TARGETS, 4, me, false);
+                            me->CastSpell(me, SPELL_WATERY_GRAVE, SPELLVALUE_MAX_TARGETS);
                         }
                         else
                         {

@@ -22,7 +22,7 @@
 #include "LogsDatabaseAccessor.h"
 #include "GuildMgr.h"
 #include "GameTime.h"
-#include "utf8.h"
+//#include "utf8.h"
 
 #include <algorithm>
 
@@ -247,21 +247,21 @@ void WorldSession::HandleMessagechatOpcode(WorldPacket & recvData)
             msg.erase(pos);
 
         // abort on any sort of nasty character
-        for (uint8 c : msg)
-            if (isNasty(c))
-            {
-                TC_LOG_ERROR("network", "Player %s (GUID: %u) sent a message containing control character %u - blocked", GetPlayer()->GetName().c_str(),
-                    GetPlayer()->GetGUID().GetCounter(), uint8(c));
-                return;
-            }
+     //   for (uint8 c : msg)
+      //      if (isNasty(c))
+      //      {
+//TC_LOG_ERROR("network", "Player %s (GUID: %u) sent a message containing control character %u - blocked", GetPlayer()->GetName().c_str(),
+     //               GetPlayer()->GetGUID().GetCounter(), uint8(c));
+     //           return;
+     //       }
 
         // validate utf8
-        if (!utf8::is_valid(msg.begin(), msg.end()))
-        {
-            TC_LOG_ERROR("network", "Player %s (GUID: %u) sent a message containing an invalid UTF8 sequence - blocked", GetPlayer()->GetName().c_str(),
-                GetPlayer()->GetGUID().GetCounter());
-            return;
-        }
+      //  if (!utf8::is_valid(msg.begin(), msg.end()))
+       // {
+      //      TC_LOG_ERROR("network", "Player %s (GUID: %u) sent a message containing an invalid UTF8 sequence - blocked", GetPlayer()->GetName().c_str(),
+      //          GetPlayer()->GetGUID().GetCounter());
+      //      return;
+     //   }
 
         // collapse multiple spaces into one
         if (sWorld->getBoolConfig(CONFIG_CHAT_FAKE_MESSAGE_PREVENTING))

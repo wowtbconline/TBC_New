@@ -221,7 +221,7 @@ public:
                     break;
                 case EVENT_SPELL_SHOCK_BARRIER:
                     me->CastSpell(me, SPELL_SHOCK_BARRIER, true);
-                    me->CastCustomSpell(SPELL_PYROBLAST, SPELLVALUE_MAX_TARGETS, 1, (Unit*)NULL, false);
+                    me->CastSpell(me, SPELL_PYROBLAST, true);
                     events.ScheduleEvent(EVENT_SPELL_SHOCK_BARRIER, 50000);
                     break;
                 case EVENT_SPELL_PHOENIX:

@@ -194,7 +194,7 @@ class boss_magtheridon : public CreatureScript
                         events2.ScheduleEvent(EVENT_CHECK_GRASP, 0);
                         break;
                     case EVENT_BLAZE:
-                        me->CastCustomSpell(SPELL_BLAZE, SPELLVALUE_MAX_TARGETS, 1);
+                        me->CastSpell(SPELL_BLAZE, SPELLVALUE_MAX_TARGETS);
                         events.ScheduleEvent(EVENT_BLAZE, 30000);
                         break;
                     case EVENT_ENRAGE:

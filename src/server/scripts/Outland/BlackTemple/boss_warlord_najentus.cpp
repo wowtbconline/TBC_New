@@ -120,7 +120,7 @@ public:
                     me->CastSpell(me, SPELL_BERSERK, true);
                     break;
                 case EVENT_SPELL_NEEDLE:
-                    me->CastCustomSpell(SPELL_NEEDLE_SPINE, SPELLVALUE_MAX_TARGETS, 3, me, false);
+                    me->CastSpell(me, SPELL_NEEDLE_SPINE, SPELLVALUE_MAX_TARGETS);
                     events.ScheduleEvent(EVENT_SPELL_NEEDLE, 15000);
                     break;
                 case EVENT_SPELL_SPINE:

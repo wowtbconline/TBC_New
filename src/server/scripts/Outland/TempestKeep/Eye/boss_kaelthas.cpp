@@ -642,7 +642,7 @@ class boss_kaelthas : public CreatureScript
                     case EVENT_SPELL_MIND_CONTROL:
                         if (roll_chance_i(50))
                             Talk(SAY_MINDCONTROL);
-                        me->CastCustomSpell(SPELL_MIND_CONTROL, SPELLVALUE_MAX_TARGETS, 3, me, false);
+                        me->CastSpell(me, SPELL_MIND_CONTROL, SPELLVALUE_MAX_TARGETS);
                         break;
                     case EVENT_SPELL_SUMMON_PHOENIX:
                         Talk(SAY_SUMMON_PHOENIX);

@@ -35,18 +35,18 @@ HyperlinkInfo Trinity::Hyperlinks::ParseHyperlink(char const* pos)
 {
     //color tag
     if (*(pos++) != '|' || *(pos++) != 'c')
-        return nullptr;
+        return NULL;
     uint32 color = 0;
     for (uint8 i = 0; i < 8; ++i)
     {
         if (uint8 hex = toHex(*(pos++)))
             color = (color << 4) | (hex & 0xf);
         else
-            return nullptr;
+            return NULL;
     }
     // link data start tag
     if (*(pos++) != '|' || *(pos++) != 'H')
-        return nullptr;
+        return NULL;
     // link tag, find next : or |
     char const* tagStart = pos;
     size_t tagLength = 0;
@@ -59,24 +59,24 @@ HyperlinkInfo Trinity::Hyperlinks::ParseHyperlink(char const* pos)
         ++dataLength;
     // ok, next should be link data end tag...
     if (*(pos++) != 'h')
-        return nullptr;
+        return NULL;
     // then visible link text, starts with [
     if (*(pos++) != '[')
-        return nullptr;
+        return NULL;
     // skip until we hit the next ], abort on unexpected |
     char const* textStart = pos;
     size_t textLength = 0;
     while (*pos)
     {
         if (*pos == '|')
-            return nullptr;
+            return NULL;
         if (*(pos++) == ']')
             break;
         ++textLength;
     }
     // link end tag
     if (*(pos++) != '|' || *(pos++) != 'h' || *(pos++) != '|' || *(pos++) != 'r')
-        return nullptr;
+        return NULL;
     // ok, valid hyperlink, return info
     return { pos, color, tagStart, tagLength, dataStart, dataLength, textStart, textLength };
 }
@@ -126,7 +126,7 @@ struct LinkValidator<LinkTags::item>
     {
         ItemLocale const* locale = sObjectMgr->GetItemLocale(data.Item->ItemId);
 
-        char const* const* randomSuffix = nullptr;
+        char const* const* randomSuffix = NULL;
         if (data.RandomPropertyId < 0)
         {
             if (ItemRandomSuffixEntry const* suffixEntry = sItemRandomSuffixStore.LookupEntry(-data.RandomPropertyId))

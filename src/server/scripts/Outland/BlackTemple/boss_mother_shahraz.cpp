@@ -146,7 +146,7 @@ class boss_mother_shahraz : public CreatureScript
                         break;
                     case EVENT_SPELL_FATAL_ATTRACTION:
                         Talk(SAY_SPELL);
-                        me->CastCustomSpell(SPELL_FATAL_ATTRACTION, SPELLVALUE_MAX_TARGETS, 3, me, false);
+                        me->CastSpell(me, SPELL_FATAL_ATTRACTION, SPELLVALUE_MAX_TARGETS);
                         events.ScheduleEvent(EVENT_SPELL_FATAL_ATTRACTION, 60000);
                         break;
                 }

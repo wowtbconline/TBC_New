@@ -569,7 +569,7 @@ public:
                     events.RescheduleEvent(EVENT_SPELL_SOUL_FLAY, 2000);
                     break;
                 case EVENT_SPELL_FIRE_BLOOM:
-                    me->CastCustomSpell(SPELL_FIRE_BLOOM, SPELLVALUE_MAX_TARGETS, 5, me, TRIGGERED_NONE);
+					me->CastSpell(me, SPELL_FIRE_BLOOM, TRIGGERED_NONE);
                     me->SetTarget(me->GetVictim()->GetGUID());
                     events.ScheduleEvent(EVENT_SPELL_FIRE_BLOOM, phase == PHASE_SACRIFICE ? 20000 : 40000);
                     events.RescheduleEvent(EVENT_SPELL_SOUL_FLAY, 1500);
@@ -606,10 +606,10 @@ public:
                     break;
                 case EVENT_SPELL_SINISTER_REFLECTION:
                     Talk(SAY_KJ_REFLECTION);
-                    me->CastCustomSpell(SPELL_SINISTER_REFLECTION, SPELLVALUE_MAX_TARGETS, 1, me, TRIGGERED_NONE);
-                    me->CastCustomSpell(SPELL_SINISTER_REFLECTION, SPELLVALUE_MAX_TARGETS, 1, me, TRIGGERED_NONE);
-                    me->CastCustomSpell(SPELL_SINISTER_REFLECTION, SPELLVALUE_MAX_TARGETS, 1, me, TRIGGERED_NONE);
-                    me->CastCustomSpell(SPELL_SINISTER_REFLECTION, SPELLVALUE_MAX_TARGETS, 1, me, TRIGGERED_NONE);
+                    me->CastSpell(me, SPELL_SINISTER_REFLECTION, TRIGGERED_NONE);
+                    me->CastSpell(me, SPELL_SINISTER_REFLECTION, TRIGGERED_NONE);
+                    me->CastSpell(me, SPELL_SINISTER_REFLECTION, TRIGGERED_NONE);
+					me->CastSpell(me, SPELL_SINISTER_REFLECTION, TRIGGERED_NONE);
                     break;
                 case EVENT_SPELL_FLAME_DART:
                     me->CastSpell(me, SPELL_FLAME_DART, false);

@@ -230,7 +230,7 @@ class boss_leotheras_the_blind : public CreatureScript
                         break;
                     case EVENT_SPELL_INSIDIOUS_WHISPER:
                         Talk(SAY_INNER_DEMONS);
-                        me->CastCustomSpell(SPELL_INSIDIOUS_WHISPER, SPELLVALUE_MAX_TARGETS, 5, me, false);
+                        me->CastSpell(me, SPELL_INSIDIOUS_WHISPER, SPELLVALUE_MAX_TARGETS);
                         break;
                     case EVENT_SUMMON_DEMON:
                         me->CastSpell(me, SPELL_SUMMON_SHADOW_OF_LEOTHERAS, true);

@@ -50,7 +50,7 @@ struct SpawnData
     int32 spawntimesecs = 0;
     int32 spawntimesecs_max = 0; //if defined, roll between spawntimesecs and spawntimesecs_max
     uint8 spawnMask = 0;
-    SpawnGroupTemplateData const* spawnGroupData = nullptr;
+    SpawnGroupTemplateData const* spawnGroupData = NULL;
     uint32 scriptId = 0;
     bool dbData = true;
 

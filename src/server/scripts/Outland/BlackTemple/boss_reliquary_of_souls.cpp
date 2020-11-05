@@ -236,7 +236,7 @@ class boss_reliquary_of_souls : public CreatureScript
                             events.ScheduleEvent(EVENT_SPAWN_SOUL, i*1200);
                         break;
                     case EVENT_SPAWN_SOUL:
-                        me->CastCustomSpell(SPELL_SUMMON_ENSLAVED_SOUL, SPELLVALUE_MAX_TARGETS, 1, me, false);
+                        me->CastSpell(me, SPELL_SUMMON_ENSLAVED_SOUL, SPELLVALUE_MAX_TARGETS);
                         break;
                 }
 
@@ -341,7 +341,7 @@ class boss_essence_of_suffering : public CreatureScript
                 switch (events.ExecuteEvent())
                 {
                     case EVENT_SUFF_SOUL_DRAIN:
-                        me->CastCustomSpell(SPELL_SOUL_DRAIN, SPELLVALUE_MAX_TARGETS, 3, me, false);
+                        me->CastSpell(me, SPELL_SOUL_DRAIN, SPELLVALUE_MAX_TARGETS);
                         events.ScheduleEvent(EVENT_SUFF_SOUL_DRAIN, 30000);
                         break;
                     case EVENT_SUFF_FRENZY:
@@ -544,7 +544,7 @@ class boss_essence_of_anger : public CreatureScript
                     case EVENT_ANGER_SPITE:
                         if (roll_chance_i(30))
                             Talk(ANGER_SAY_SPEC);
-                        me->CastCustomSpell(SPELL_SPITE, SPELLVALUE_MAX_TARGETS, 3, me, false);
+                        me->CastSpell(me, SPELL_SPITE, SPELLVALUE_MAX_TARGETS);
                         events.ScheduleEvent(EVENT_ANGER_SPITE, 25000);
                         break;
                     case EVENT_ANGER_SOUL_SCREAM:
@@ -669,7 +669,7 @@ class spell_reliquary_of_souls_aura_of_desire : public SpellScriptLoader
             void HandleProc(AuraEffect const* /*aurEff*/, ProcEventInfo& eventInfo)
             {
                 PreventDefaultAction();
-                eventInfo.GetActionTarget()->CastCustomSpell(SPELL_AURA_OF_DESIRE_DAMAGE, SPELLVALUE_BASE_POINT0, eventInfo.GetDamageInfo()->GetDamage()/2, eventInfo.GetActor(), true);
+                eventInfo.GetActionTarget()->CastSpell(SPELL_AURA_OF_DESIRE_DAMAGE, SPELLVALUE_BASE_POINT0);
             }
 
             void CalculateAmount(AuraEffect const* /*aurEff*/, int32& amount, bool& /*canBeRecalculated*/)

@@ -127,7 +127,7 @@ class boss_gurtogg_bloodboil : public CreatureScript
                         me->CastSpell(me, SPELL_BERSERK, true);
                         break;
                     case EVENT_SPELL_BLOOD_BOIL:
-                        me->CastCustomSpell(SPELL_BLOODBOIL, SPELLVALUE_MAX_TARGETS, 5, me, false);
+                        me->CastSpell(me, SPELL_BLOODBOIL, SPELLVALUE_MAX_TARGETS);
                         events.ScheduleEvent(EVENT_SPELL_BLOOD_BOIL, 10000);
                         break;
                     case EVENT_SPELL_BEWILDERING_STRIKE:
