@@ -22,8 +22,7 @@ You can think of this core as TrinityCore for TBC.
 Over the years all major systems were rewritten using TC as a base. This allows us to continuously make use of the TrinityCore's recent developments and have a dev-friendly core using the well known infrastructure of TC. 
 When a system has been imported from TC, differences (either improvements or TBC adaptations) from original TC are usually highlighted by comments.
 * Automated testing system  
-Our star feature! Mainly used for spells at the moment.
-* [Continuous integration](https://travis-ci.org/sunstrider/sunstrider-core)  
+Our star feature! Mainly used for spells at the moment. 
 Including tests results!
 * Dynamic spawn system (see [here](https://github.com/TrinityCore/TrinityCore/pull/19056))
 * Scripts and tests can be compiled in dynamic libraries and reloaded on runtime (see [here](https://trinitycore.atlassian.net/wiki/spaces/tc/pages/18874377/Using+the+script+hotswapping+system))
