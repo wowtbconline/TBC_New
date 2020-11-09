@@ -277,7 +277,7 @@ friend class InstanceMap;
         uint32 completedEncounters; // completed encounter mask, bit indexes are DungeonEncounter.dbc boss numbers, used for packets
 #endif
         std::vector<InstanceSpawnGroupInfo> const* const _instanceSpawnGroups;
-        //NYI std::unordered_set<uint32> _activatedAreaTriggers;
+        std::unordered_set<uint32> _activatedAreaTriggers;
 
 #ifdef TRINITY_API_USE_DYNAMIC_LINKING
         // Strong reference to the associated script module

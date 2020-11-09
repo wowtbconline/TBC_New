@@ -23,7 +23,7 @@ InstanceScript::InstanceScript(Map *map) : instance(map), _instanceSpawnGroups(s
     // Acquire a strong reference from the script module
     // to keep it loaded until this object is destroyed.
     module_reference = sScriptMgr->AcquireModuleReferenceOfScriptName(scriptname);
-#endif // #ifndef TRINITY_API_USE_DYNAMIC_LINKING
+#endif //#ifndef TRINITY_API_USE_DYNAMIC_LINKING
 }
 
 void InstanceScript::SaveToDB()
