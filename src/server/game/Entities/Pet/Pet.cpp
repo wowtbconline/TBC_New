@@ -89,7 +89,7 @@ Pet::Pet(Player* owner, PetType type)
     m_spells.clear();
     m_autospells.clear();
     m_declinedname = nullptr;
-    //m_isActive = true;
+    m_isActive = true;
 }
 
 Pet::~Pet()
@@ -1053,7 +1053,7 @@ bool Pet::CreateBaseAtTamed(CreatureTemplate const* cinfo, Map* map, uint32 phas
 #else
         SetByteFlag(UNIT_FIELD_BYTES_2, UNIT_BYTES_2_OFFSET_PET_FLAGS, UNIT_RENAME_ALLOWED);
 #endif
-        //SetUInt32Value(UNIT_MOD_CAST_SPEED, creature->GetUInt32Value(UNIT_MOD_CAST_SPEED));
+      // SetUInt32Value(UNIT_MOD_CAST_SPEED, creature->GetUInt32Value(UNIT_MOD_CAST_SPEED));
         SetLoyaltyLevel(REBELLIOUS);
     }
 
