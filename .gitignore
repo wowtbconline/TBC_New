@@ -12,3 +12,4 @@ sql/world.sql
 ################################################################################
 syntax: regexp
 build
+src/server/game/Globals/ObjectMgr.cpp
