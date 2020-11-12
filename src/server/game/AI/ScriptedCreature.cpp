@@ -617,6 +617,64 @@ void BossAI::_DespawnAtEvade(Seconds delayToRespawn, Creature* who)
         instance->SetBossState(_bossId, FAIL);
 }
 
+// WorldBossAI - for non-instanced bosses
+WorldBossAI::WorldBossAI(Creature* creature) : ScriptedAI(creature), summons(creature) { }
+
+void WorldBossAI::_Reset()
+{
+    if (!me->IsAlive())
+        return;
+
+    events.Reset();
+    summons.DespawnAll();
+}
+
+void WorldBossAI::_JustDied()
+{
+    events.Reset();
+    summons.DespawnAll();
+}
+
+void WorldBossAI::_JustEngagedWith()
+{
+    Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0, 0.0f, true);
+    if (target)
+        AttackStart(target);
+}
+
+void WorldBossAI::JustSummoned(Creature* summon)
+{
+    summons.Summon(summon);
+    Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0, 0.0f, true);
+    if (target)
+        summon->AI()->AttackStart(target);
+}
+
+void WorldBossAI::SummonedCreatureDespawn(Creature* summon)
+{
+    summons.Despawn(summon);
+}
+
+void WorldBossAI::UpdateAI(uint32 diff)
+{
+    if (!UpdateVictim())
+        return;
+
+    events.Update(diff);
+
+    if (me->HasUnitState(UNIT_STATE_CASTING))
+        return;
+
+    while (uint32 eventId = events.ExecuteEvent())
+    {
+        ExecuteEvent(eventId);
+        if (me->HasUnitState(UNIT_STATE_CASTING))
+            return;
+    }
+
+    DoMeleeAttackIfReady();
+}
+
 Unit* ScriptedAI::DoSelectLowestHpFriendly(float range, uint32 MinHPDiff)
 {
     Unit* pUnit = nullptr;
