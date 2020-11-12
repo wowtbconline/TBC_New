@@ -21,13 +21,13 @@ addons:
       - libreadline6-dev
       - zlib1g-dev
       - libbz2-dev
-      - libboost1.62-dev
-      - libboost-filesystem1.62-dev
-      - libboost-iostreams1.62-dev
-      - libboost-program-options1.62-dev
-      - libboost-regex1.62-dev
-      - libboost-system1.62-dev
-      - libboost-thread1.62-dev
+      - libboost1.71-dev
+      - libboost-filesystem1.71-dev
+      - libboost-iostreams1.71-dev
+      - libboost-program-options1.71-dev
+      - libboost-regex1.71-dev
+      - libboost-system1.71-dev
+      - libboost-thread1.71-dev
       # For data archive
       - p7zip
       # For post run debug
@@ -45,14 +45,14 @@ before_install:
   # More recent cmake
   - sudo apt-get remove cmake
   - sudo mkdir /opt/cmake
-  - wget https://cmake.org/files/v3.11/cmake-3.11.4-Linux-x86_64.sh
+  - wget https://cmake.org/files/v3.18/cmake-3.18.4-Linux-x86_64.sh
   - sudo sh cmake-3.11.4-Linux-x86_64.sh --prefix=/opt/cmake --skip-license
  
 install:
   - mysql -uroot -e 'create database test_mysql'
   - mkdir bin logs data
   - cd bin
-  - /opt/cmake/bin/cmake ../ -DPLAYERBOT=1 -DTOOLS=1 -DSCRIPTS=static -DTESTS=1 -DCMAKE_BUILD_TYPE=Release -DDO_DEBUG=1 -DCMAKE_INSTALL_PREFIX=check_install
+  - /opt/cmake/bin/cmake ../ -DPLAYERBOT=0 -DTOOLS=1 -DSCRIPTS=static -DTESTS=0 -DCMAKE_BUILD_TYPE=Release -DDO_DEBUG=1 -DCMAKE_INSTALL_PREFIX=check_install
   - cd ..
 
 script:
@@ -64,18 +64,11 @@ script:
   - cd bin
   - make -j 10 -k && make install && make clean
   - cd check_install
-  - mkdir data && cd data
-  - wget https://51.15.19.183/2019_01_22_data.7z
-  - 7zr x 2019_01_22_data.7z -y > /dev/null
-  - rm 2019_01_22_data.7z
   - cd ..
   - ls
   - cd bin
   - ./authserver --version
   - ./worldserver --version
-  - wget https://github.com/SunstriderEmu/sunstrider-legacy/releases/download/2019_01_02/world_2019_01_02.sql.zip
-  - unzip world_2019_01_02.sql.zip
-  - rm world_2019_01_02.sql.zip
   - sed -e 's!^DataDir\s*=.*!DataDir = "../data/"!g;' -e 's!^LogsDir\s*=.*!LogsDir = "../logs/"!g;'  -e 's!^Testing.MaxParallel\s*=.*!Testing.MaxParallel = 1000!g;' -e 's!^Logger.scripts.ai\s*=.*!Logger.scripts.ai=6,Console Server!g;' < "../etc/worldserver.conf.dist" > "../etc/worldserver.conf"
   - ulimit -c unlimited -S
   - ./worldserver --tests
