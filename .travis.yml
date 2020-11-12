@@ -34,7 +34,7 @@ addons:
       - gdb
       
 before_install:
-  - apt-cache policy libboost-dev
+  - apt-cache policy libboost-dev libssl-dev libmariadb-client-lgpl-dev libreadline6-dev zlib1g-dev libbz2-dev libboost1 .65-dev libboost-filesystem1.65-dev libboost-iostreams1.65-dev libboost-program-options1.65-dev libboost-regex1.65-dev libboost-system1.65-dev libboost-thread1.65-dev p7zip
   - git config user.email "travis@build.bot" && git config user.name "Travis CI"
   - git tag -a -m "Travis build" init
   # To get core dump infos
