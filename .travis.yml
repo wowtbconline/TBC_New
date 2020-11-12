@@ -21,20 +21,19 @@ addons:
       - libreadline6-dev
       - zlib1g-dev
       - libbz2-dev
-      - libboost1.65-dev
-      - libboost-filesystem1.65-dev
-      - libboost-iostreams1.65-dev
-      - libboost-program-options1.65-dev
-      - libboost-regex1.65-dev
-      - libboost-system1.65-dev
-      - libboost-thread1.65-dev
+      - libboost1.60-dev
+      - libboost-filesystem1.60-dev
+      - libboost-iostreams1.60-dev
+      - libboost-program-options1.60-dev
+      - libboost-regex1.60-dev
+      - libboost-system1.60-dev
+      - libboost-thread1.60-dev
       # For data archive
       - p7zip
       # For post run debug
       - gdb
       
 before_install:
-  - sudo -E apt-get
   - apt-cache policy
   - git config user.email "travis@build.bot" && git config user.name "Travis CI"
   - git tag -a -m "Travis build" init
