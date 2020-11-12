@@ -21,13 +21,13 @@ addons:
       - libreadline6-dev
       - zlib1g-dev
       - libbz2-dev
-      - libboost1.71-dev
-      - libboost-filesystem1.71-dev
-      - libboost-iostreams1.71-dev
-      - libboost-program-options1.71-dev
-      - libboost-regex1.71-dev
-      - libboost-system1.71-dev
-      - libboost-thread1.71-dev
+      - libboost1.69-dev
+      - libboost-filesystem1.69-dev
+      - libboost-iostreams1.69-dev
+      - libboost-program-options1.69-dev
+      - libboost-regex1.69-dev
+      - libboost-system1.69-dev
+      - libboost-thread1.69-dev
       # For data archive
       - p7zip
       # For post run debug
