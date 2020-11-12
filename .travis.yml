@@ -34,9 +34,12 @@ addons:
       - gdb
       
 before_install:
-  - apt-cache policy
   - git config user.email "travis@build.bot" && git config user.name "Travis CI"
   - git tag -a -m "Travis build" init
+  # Get cmake 3.16.2
+  - sudo mkdir /opt/cmake
+  - wget https://cmake.org/files/v3.16/cmake-3.16.2-Linux-x86_64.sh
+  - sudo sh cmake-3.16.2-Linux-x86_64.sh --prefix=/opt/cmake --skip-license
   # To get core dump infos
   - ulimit -c
   - ulimit -a -S
