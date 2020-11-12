@@ -34,6 +34,7 @@ addons:
       - gdb
       
 before_install:
+  - sudo -E apt-get
   - apt-cache policy
   - git config user.email "travis@build.bot" && git config user.name "Travis CI"
   - git tag -a -m "Travis build" init
