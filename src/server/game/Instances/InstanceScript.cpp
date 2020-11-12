@@ -7,6 +7,8 @@
 #include "Language.h"
 #include "ScriptMgr.h"
 #include "AreaBoundary.h"
+#include "CreatureAI.h"
+#include "CreatureAIImpl.h"
 
 BossBoundaryData::~BossBoundaryData()
 {
@@ -106,20 +108,40 @@ void InstanceScript::SetHeaders(std::string const& dataHeaders)
             headers.push_back(header);
 }
 
-void InstanceScript::DoRemoveAurasDueToSpellOnPlayers(uint32 spellId)
+void InstanceScript::DoRemoveAurasDueToSpellOnPlayers(uint32 spell, bool includePets /*= false*/, bool includeControlled /*= false*/)
 {
-    Map::PlayerList const& players = instance->GetPlayers();
-    if (!players.isEmpty())
+    Map::PlayerList const& playerList = instance->GetPlayers();
+    for (auto itr = playerList.begin(); itr != playerList.end(); ++itr)
+        DoRemoveAurasDueToSpellOnPlayer(itr->GetSource(), spell, includePets, includeControlled);
+}
+
+void InstanceScript::DoRemoveAurasDueToSpellOnPlayer(Player* player, uint32 spell, bool includePets /*= false*/, bool includeControlled /*= false*/)
+{
+    if (!player)
+        return;
+
+    player->RemoveAurasDueToSpell(spell);
+
+    if (!includePets)
+        return;
+
+    for (uint8 itr2 = 0; itr2 < MAX_SUMMON_SLOT; ++itr2)
     {
-        for(const auto& itr : players)
-        {
-            if (Player* player = itr.GetSource())
-            {
-                player->RemoveAurasDueToSpell(spellId);
-                if (Pet* pet = player->GetPet())
-                    pet->RemoveAurasDueToSpell(spellId);
-            }
-        }
+        if (ObjectGuid summonGUID = player->m_SummonSlot[itr2])
+            if (Creature* summon = instance->GetCreature(summonGUID))
+                summon->RemoveAurasDueToSpell(spell);
+    }
+
+    if (!includeControlled)
+        return;
+
+    for (auto itr2 = player->m_Controlled.begin(); itr2 != player->m_Controlled.end(); ++itr2)
+    {
+        if (Unit* controlled = *itr2)
+            if (controlled->IsInWorld() && controlled->GetTypeId() == TYPEID_UNIT)
+                controlled->RemoveAurasDueToSpell(spell);
+            
+        
     }
 }
 
@@ -153,7 +175,16 @@ void InstanceScript::LoadBossBoundaries(BossBoundaryData const& data)
             bosses[entry.BossId].boundary.push_back(entry.Boundary);
 }
 
-void InstanceScript::LoadMinionData(const MinionData* data)
+void InstanceScript::LoadMinionData(std::vector<MinionData> const datas)
+{
+    for (auto data : datas)
+        if (data.bossId < bosses.size())
+            minions.insert(std::make_pair(data.entry, MinionInfo(&bosses[data.bossId])));
+
+    TC_LOG_DEBUG("scripts", "InstanceScript::LoadMinionData: " UI64FMTD " minions loaded.", uint64(minions.size()));
+}
+
+void InstanceScript::LoadMinionData(MinionData const* data)
 {
     while (data->entry)
     {
@@ -166,7 +197,16 @@ void InstanceScript::LoadMinionData(const MinionData* data)
     TC_LOG_DEBUG("scripts", "InstanceScript::LoadMinionData: " UI64FMTD " minions loaded.", uint64(minions.size()));
 }
 
-void InstanceScript::LoadDoorData(const DoorData* data)
+void InstanceScript::LoadDoorData(std::vector<DoorData> const datas)
+{
+    for(auto data : datas)
+        if (data.bossId < bosses.size())
+            doors.insert(std::make_pair(data.entry, DoorInfo(&bosses[data.bossId], data.type)));
+
+    TC_LOG_DEBUG("scripts", "InstanceScript::LoadDoorData: " UI64FMTD " doors loaded.", uint64(doors.size()));
+}
+
+void InstanceScript::LoadDoorData(DoorData const* data)
 {
     while (data->entry)
     {
@@ -186,15 +226,6 @@ void InstanceScript::LoadObjectData(std::vector<ObjectData> const creatureData, 
     TC_LOG_DEBUG("scripts", "InstanceScript::LoadObjectData: " SZFMTD " objects loaded.", _creatureInfo.size() + _gameObjectInfo.size());
 }
 
-void InstanceScript::LoadObjectData(std::vector<ObjectData> const datas, ObjectInfoMap& objectInfo)
-{
-    for (auto data : datas)
-    {
-        ASSERT(objectInfo.find(data.entry) == objectInfo.end());
-        objectInfo[data.entry] = data.type;
-    }
-}
-
 void InstanceScript::LoadObjectData(ObjectData const* creatureData, ObjectData const* gameObjectData)
 {
     if (creatureData)
@@ -204,6 +235,15 @@ void InstanceScript::LoadObjectData(ObjectData const* creatureData, ObjectData c
         LoadObjectData(gameObjectData, _gameObjectInfo);
 
     TC_LOG_DEBUG("scripts", "InstanceScript::LoadObjectData: " SZFMTD " objects loaded.", _creatureInfo.size() + _gameObjectInfo.size());
+}
+
+void InstanceScript::LoadObjectData(std::vector<ObjectData> const datas, ObjectInfoMap& objectInfo)
+{
+    for (auto data : datas)
+    {
+        ASSERT(objectInfo.find(data.entry) == objectInfo.end());
+        objectInfo[data.entry] = data.type;
+    }
 }
 
 void InstanceScript::LoadObjectData(ObjectData const* data, ObjectInfoMap& objectInfo)

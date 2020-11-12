@@ -273,7 +273,7 @@ void InstanceSaveManager::LoadInstances()
 
 void InstanceSaveManager::LoadResetTimes()
 {
-	return;
+
     time_t now = WorldGameTime::GetGameTime();
     time_t today = (now / DAY) * DAY;
 
@@ -628,12 +628,12 @@ void InstanceSaveManager::_ResetOrWarnAll(uint32 mapid, Difficulty difficulty, b
         stmt->setUInt8(1, uint8(difficulty));
         trans->Append(stmt);
 
-        
+        /*
         stmt = CharacterDatabase.GetPreparedStatement(CHAR_UPD_EXPIRE_CHAR_INSTANCE_BY_MAP_DIFF);
         stmt->setUInt16(0, uint16(mapid));
         stmt->setUInt8(1, uint8(difficulty));
         trans->Append(stmt);
-        
+        */
 
         CharacterDatabase.CommitTransaction(trans);
 
