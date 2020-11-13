@@ -135,7 +135,7 @@ void Map::ScriptsProcess()
             }
         }
 
-        //if(source && !source->IsInWorld()) source = NULL;
+        if(source && !source->IsInWorld()) source = NULL;
 
         WorldObject* target = nullptr;
 

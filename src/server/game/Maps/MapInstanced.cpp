@@ -39,7 +39,7 @@ void MapInstanced::Update(const uint32& t)
         {
             if (!DestroyInstance(i))                             // iterator incremented
             {
-                //m_unloadTimer
+				m_unloadTimer;
             }
         }
         else
@@ -121,7 +121,7 @@ Map* MapInstanced::CreateInstanceForPlayer(const uint32 mapId, Player* player, u
     Map* map = nullptr;
     uint32 newInstanceId = 0;                       // instanceId of the resulting map
     
-    //uint32 instanceId = player->GetInstanceId();
+    uint32 instanceId = player->GetInstanceId();
 
     if (IsBattlegroundOrArena())
     {
