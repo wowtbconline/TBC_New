@@ -13,6 +13,14 @@
 
 #include "SmartScriptMgr.h"
 
+class Creature;
+class GameObject;
+class Player;
+class SpellInfo;
+class Unit;
+class WorldObject;
+struct AreaTriggerEntry;
+
 class TC_GAME_API SmartScript
 {
     public:
