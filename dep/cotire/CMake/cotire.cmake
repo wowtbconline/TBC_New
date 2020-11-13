@@ -1824,10 +1824,10 @@ function (cotire_add_prefix_pch_inclusion_flags _language _compilerID _compilerV
 		# note: ccache requires the -include flag to be used in order to process precompiled header correctly
 		if (_flags)
 			# append to list
-			list (APPEND _flags -Winvalid-pch -include "${_prefixFile}")
+			list (APPEND _flags -include "${_prefixFile}")
 		else()
 			# return as a flag string
-			set (_flags "-Winvalid-pch -include \"${_prefixFile}\"")
+			set (_flags " -include \"${_prefixFile}\"")
 		endif()
 	elseif (_compilerID MATCHES "Clang")
 		if (UNIX)
