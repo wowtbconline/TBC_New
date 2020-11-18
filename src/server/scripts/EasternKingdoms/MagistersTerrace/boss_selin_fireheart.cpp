@@ -1,10 +1,26 @@
 /*
-REWRITTEN BY XINEF
+ * Copyright (C) 2008-2019 TrinityCore <https://www.trinitycore.org/>
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation; either version 2 of the License, or (at your
+ * option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "ScriptMgr.h"
-#include "ScriptedCreature.h"
+#include "InstanceScript.h"
 #include "magisters_terrace.h"
+#include "MotionMaster.h"
+#include "ObjectAccessor.h"
+#include "ScriptedCreature.h"
 
 enum Says
 {
@@ -18,209 +34,254 @@ enum Says
 
 enum Spells
 {
-    SPELL_FEL_CRYSTAL_COSMETIC      = 44374,
-    SPELL_MANA_RAGE                 = 44320,
-    SPELL_MANA_RAGE_TRIGGER            = 44321,
+    // Crystal effect spells
+    SPELL_FEL_CRYSTAL_DUMMY         = 44329,
+    SPELL_MANA_RAGE                 = 44320,               // This spell triggers 44321, which changes scale and regens mana Requires an entry in spell_script_target
 
-    //Selin's spells
-    SPELL_DRAIN_LIFE_N                = 44294,
-    SPELL_DRAIN_LIFE_H                = 46155,
-    SPELL_FEL_EXPLOSION                = 44314,
-    SPELL_DRAIN_MANA                = 46153
+    // Selin's spells
+    SPELL_DRAIN_LIFE                = 44294,
+    SPELL_FEL_EXPLOSION             = 44314,
+
+    SPELL_DRAIN_MANA                = 46153               // Heroic only
+};
+
+enum Phases
+{
+    PHASE_NORMAL                    = 1,
+    PHASE_DRAIN                     = 2
 };
 
 enum Events
 {
-    EVENT_SPELL_DRAIN_LIFE            = 1,
-    EVENT_SPELL_FEL_EXPLOSION        = 2,
-    EVENT_SPELL_DRAIN_MANA            = 3,
-    EVENT_DRAIN_CRYSTAL                = 4,
-    EVENT_EMPOWER                    = 5,
-    EVENT_RESTORE_COMBAT            = 6
+    EVENT_FEL_EXPLOSION             = 1,
+    EVENT_DRAIN_CRYSTAL,
+    EVENT_DRAIN_MANA,
+    EVENT_DRAIN_LIFE,
+    EVENT_EMPOWER
 };
 
+enum Misc
+{
+    ACTION_SWITCH_PHASE             = 1
+};
+
+// @todo crystals should really be a DB creature summon group, having them in `creature` like this will cause tons of despawn/respawn bugs
 class boss_selin_fireheart : public CreatureScript
 {
-public:
-    boss_selin_fireheart() : CreatureScript("boss_selin_fireheart") { }
+    public:
+        boss_selin_fireheart() : CreatureScript("boss_selin_fireheart") { }
 
-    CreatureAI* GetAI(Creature* creature) const
-    {
-        return GetMagistersTerraceAI<boss_selin_fireheartAI>(creature);
-    };
-
-    struct boss_selin_fireheartAI : public ScriptedAI
-    {
-        boss_selin_fireheartAI(Creature* creature) : ScriptedAI(creature), summons(me)
+        struct boss_selin_fireheartAI : public BossAI
         {
-            instance = creature->GetInstanceScript();
-        }
+            boss_selin_fireheartAI(Creature* creature) : BossAI(creature, DATA_SELIN_FIREHEART), _scheduledEvents(false) { }
 
-        InstanceScript* instance;
-        EventMap events;
-        SummonList summons;
-        ObjectGuid CrystalGUID;
-
-        bool CanAIAttack(const Unit* who) const
-        {
-            return who->GetPositionX() > 216.0f;
-        }
-
-        void SpawnCrystals()
-        {
-            me->SummonCreature(NPC_FEL_CRYSTAL, 248.053f, 14.592f, 3.74882f, 3.94444f, TEMPSUMMON_CORPSE_DESPAWN);
-            me->SummonCreature(NPC_FEL_CRYSTAL, 225.969f, -20.0775f, -2.9731f, 0.942478f, TEMPSUMMON_CORPSE_DESPAWN);
-            me->SummonCreature(NPC_FEL_CRYSTAL, 226.314f, 20.2183f, -2.98127f, 5.32325f, TEMPSUMMON_CORPSE_DESPAWN);
-            me->SummonCreature(NPC_FEL_CRYSTAL, 247.888f, -14.6252f, 3.80777f, 2.33874f, TEMPSUMMON_CORPSE_DESPAWN);
-            me->SummonCreature(NPC_FEL_CRYSTAL, 263.149f, 0.309245f, 1.32057f, 3.15905f, TEMPSUMMON_CORPSE_DESPAWN);
-        }
-
-        void JustSummoned(Creature* summon)
-        {
-            summon->SetReactState(REACT_PASSIVE);
-            summons.Summon(summon);
-        }
-
-        void SummonedCreatureDies(Creature* summon, Unit*)
-        {
-            summons.Despawn(summon);
-            if (events.GetPhaseMask() & 0x01)
-                events.ScheduleEvent(EVENT_RESTORE_COMBAT, 0);
-        }
-
-        void Reset()
-        {
-            events.Reset();
-            summons.DespawnAll();
-            SpawnCrystals();
-            instance->SetData(DATA_SELIN_EVENT, NOT_STARTED);
-            CrystalGUID.Clear();
-            me->SetPower(POWER_MANA, 0);
-        }
-
-        void EnterCombat(Unit* /*who*/)
-        {
-            Talk(SAY_AGGRO);
-            instance->SetData(DATA_SELIN_EVENT, IN_PROGRESS);
-
-            events.ScheduleEvent(EVENT_SPELL_DRAIN_LIFE, 2500, 1);
-            events.ScheduleEvent(EVENT_SPELL_FEL_EXPLOSION, 2000);
-            events.ScheduleEvent(EVENT_DRAIN_CRYSTAL, 14000);
-            
-            if (IsHeroic())
-                events.ScheduleEvent(EVENT_SPELL_DRAIN_MANA, 7500, 1);
-         }
-
-        void KilledUnit(Unit* victim)
-        {
-            if (victim->GetTypeId() == TYPEID_PLAYER)
-                Talk(SAY_KILL);
-        }
-
-        void JustDied(Unit* /*killer*/)
-        {
-            Talk(SAY_DEATH);
-
-            instance->SetData(DATA_SELIN_EVENT, DONE);         // Encounter complete!
-            summons.DespawnAll();
-        }
-
-        void SelectNearestCrystal()
-        {
-            if (summons.empty())
-                return;
-
-            CrystalGUID.Clear();
-            Unit* crystal = NULL;
-            for (SummonList::const_iterator i = summons.begin(); i != summons.end(); )
-                if (Creature* summon = ObjectAccessor::GetCreature(*me, *i++))
-                    if (!crystal || me->GetDistanceOrder(summon, crystal, false))
-                        crystal = summon;
-
-            if (crystal)
+            void Reset() override
             {
-                Talk(SAY_ENERGY);
-                float x, y, z;
-                crystal->GetClosePoint(x, y, z, me->GetObjectScale(), CONTACT_DISTANCE);  
-                CrystalGUID.Set(crystal->GetGUID());
-                me->GetMotionMaster()->MovePoint(2, x, y, z);
+                std::list<Creature*> crystals;
+                me->GetCreatureListWithEntryInGrid(crystals, NPC_FEL_CRYSTAL, 250.0f);
+
+                for (Creature* creature : crystals)
+                    creature->Respawn(true);
+
+                _Reset();
+                CrystalGUID.Clear();
+                _scheduledEvents = false;
             }
-        }
 
-        void MovementInform(uint32 type, uint32 id)
-        {
-            if (type == POINT_MOTION_TYPE && id == 2)
+            void DoAction(int32 action) override
             {
-                if (Unit* crystal = ObjectAccessor::GetUnit(*me, CrystalGUID))
+                switch (action)
                 {
-                    Talk(EMOTE_CRYSTAL);
-                    crystal->SetUInt32Value(UNIT_FIELD_FLAGS, 0);
-                    crystal->CastSpell(me, SPELL_MANA_RAGE, true);
-                    me->CastSpell(crystal, SPELL_FEL_CRYSTAL_COSMETIC, true);
-                    events.SetPhase(1);
-                    events.ScheduleEvent(EVENT_EMPOWER, 0, 0, 1);
+                    case ACTION_SWITCH_PHASE:
+                        events.SetPhase(PHASE_NORMAL);
+                        events.ScheduleEvent(EVENT_FEL_EXPLOSION, 2s, 0, PHASE_NORMAL);
+                        AttackStart(me->GetVictim());
+                        me->GetMotionMaster()->MoveChase(me->GetVictim());
+                        break;
+                    default:
+                        break;
                 }
-                else
-                    events.ScheduleEvent(EVENT_RESTORE_COMBAT, 0);
             }
-        }
 
-        void UpdateAI(uint32 diff)
-        {
-            if (!UpdateVictim())
-                return;
-
-            events.Update(diff);
-            if (me->HasUnitState(UNIT_STATE_CASTING))
-                return;
-
-            switch (events.ExecuteEvent())
+            void SelectNearestCrystal()
             {
-                case EVENT_SPELL_DRAIN_LIFE:
-                    if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0))
-                        me->CastSpell(target, DUNGEON_MODE(SPELL_DRAIN_LIFE_N, SPELL_DRAIN_LIFE_H), false);
-                    events.ScheduleEvent(EVENT_SPELL_DRAIN_LIFE, 10000, 1);
-                    return;
-                case EVENT_SPELL_DRAIN_MANA:
-                    if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0, PowerUsersSelector(me, POWER_MANA, 40.0f, false)))
-                        me->CastSpell(target, SPELL_DRAIN_MANA, false);
-                    events.ScheduleEvent(EVENT_SPELL_DRAIN_MANA, 10000, 1);
-                    return;
-                case EVENT_SPELL_FEL_EXPLOSION:
-                    me->RemoveAuraFromStack(SPELL_MANA_RAGE_TRIGGER);
-                    me->CastSpell(me, SPELL_FEL_EXPLOSION, false);
-                    events.ScheduleEvent(EVENT_SPELL_FEL_EXPLOSION, 2000);
-                    break;
-                case EVENT_DRAIN_CRYSTAL:
-                    events.DelayEvents(10001);
-                    events.ScheduleEvent(EVENT_EMPOWER, 10000);
-                    events.ScheduleEvent(EVENT_DRAIN_CRYSTAL, 30000);
-                    SelectNearestCrystal();
-                    break;
-                case EVENT_EMPOWER:
-                    if (me->GetPower(POWER_MANA) == me->GetMaxPower(POWER_MANA))
-                    {
-                        Talk(SAY_EMPOWERED);
-                        if (Unit* crystal = ObjectAccessor::GetUnit(*me, CrystalGUID))
-                            Unit::Kill(crystal, crystal);
-                        events.DelayEvents(10000, 1);
-                        events.ScheduleEvent(EVENT_RESTORE_COMBAT, 0);
-                    }
-                    else
-                        events.ScheduleEvent(EVENT_EMPOWER, 0, 0, 1);
-                    break;
-                case EVENT_RESTORE_COMBAT:
-                    events.SetPhase(0);
-                    me->GetMotionMaster()->MoveChase(me->GetVictim());
-                    break;
+                if (Creature* crystal = me->FindNearestCreature(NPC_FEL_CRYSTAL, 250.0f))
+                {
+                    Talk(SAY_ENERGY);
+                    Talk(EMOTE_CRYSTAL);
+
+                    DoCast(crystal, SPELL_FEL_CRYSTAL_DUMMY);
+                    CrystalGUID = crystal->GetGUID();
+
+                    float x, y, z;
+                    crystal->GetClosePoint(x, y, z, me->GetCombatReach(), CONTACT_DISTANCE);
+
+                    events.SetPhase(PHASE_DRAIN);
+                    me->SetWalk(false);
+                    me->GetMotionMaster()->MovePoint(1, x, y, z);
+                }
             }
 
-            DoMeleeAttackIfReady();
-        }
-    };
+            void ShatterRemainingCrystals()
+            {
+                std::list<Creature*> crystals;
+                me->GetCreatureListWithEntryInGrid(crystals, NPC_FEL_CRYSTAL, 250.0f);
+
+                for (Creature* crystal : crystals)
+                    crystal->KillSelf();
+            }
+
+            void JustEngagedWith(Unit* /*who*/) override
+            {
+                Talk(SAY_AGGRO);
+                _JustEngagedWith();
+
+                events.SetPhase(PHASE_NORMAL);
+                events.ScheduleEvent(EVENT_FEL_EXPLOSION, 2100ms, 0, PHASE_NORMAL);
+             }
+
+            void KilledUnit(Unit* victim) override
+            {
+                if (victim->GetTypeId() == TYPEID_PLAYER)
+                    Talk(SAY_KILL);
+            }
+
+            void MovementInform(uint32 type, uint32 id) override
+            {
+                if (type == POINT_MOTION_TYPE && id == 1)
+                {
+                    Unit* CrystalChosen = ObjectAccessor::GetUnit(*me, CrystalGUID);
+                    if (CrystalChosen && CrystalChosen->IsAlive())
+                    {
+                        CrystalChosen->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                        CrystalChosen->CastSpell(me, SPELL_MANA_RAGE, true);
+                        events.ScheduleEvent(EVENT_EMPOWER, 10s, PHASE_DRAIN);
+                    }
+                }
+            }
+
+            void JustDied(Unit* /*killer*/) override
+            {
+                Talk(SAY_DEATH);
+                _JustDied();
+
+                ShatterRemainingCrystals();
+            }
+
+            void UpdateAI(uint32 diff) override
+            {
+                if (!UpdateVictim())
+                    return;
+
+                events.Update(diff);
+
+                if (me->HasUnitState(UNIT_STATE_CASTING))
+                    return;
+
+                while (uint32 eventId = events.ExecuteEvent())
+                {
+                    switch (eventId)
+                    {
+                        case EVENT_FEL_EXPLOSION:
+                            DoCastAOE(SPELL_FEL_EXPLOSION);
+                            events.ScheduleEvent(EVENT_FEL_EXPLOSION, 2s, 0, PHASE_NORMAL);
+                            break;
+                        case EVENT_DRAIN_CRYSTAL:
+                            SelectNearestCrystal();
+                            _scheduledEvents = false;
+                            break;
+                        case EVENT_DRAIN_MANA:
+                            if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0, 45.0f, true))
+                                DoCast(target, SPELL_DRAIN_MANA);
+                            events.ScheduleEvent(EVENT_DRAIN_MANA, 10s, 0, PHASE_NORMAL);
+                            break;
+                        case EVENT_DRAIN_LIFE:
+                            if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0, 20.0f, true))
+                                DoCast(target, SPELL_DRAIN_LIFE);
+                            events.ScheduleEvent(EVENT_DRAIN_LIFE, 10s, 0, PHASE_NORMAL);
+                            break;
+                        case EVENT_EMPOWER:
+                        {
+                            Talk(SAY_EMPOWERED);
+
+                            Creature* CrystalChosen = ObjectAccessor::GetCreature(*me, CrystalGUID);
+                            if (CrystalChosen && CrystalChosen->IsAlive())
+                                CrystalChosen->KillSelf();
+
+                            CrystalGUID.Clear();
+
+                            me->GetMotionMaster()->Clear();
+                            me->GetMotionMaster()->MoveChase(me->GetVictim());
+                            break;
+                        }
+                        default:
+                            break;
+                    }
+
+                    if (me->HasUnitState(UNIT_STATE_CASTING))
+                        return;
+                }
+
+                if (me->GetPower(POWER_MANA) * 100 / me->GetMaxPower(POWER_MANA) < 10)
+                {
+                    if (events.IsInPhase(PHASE_NORMAL) && !_scheduledEvents)
+                    {
+                        _scheduledEvents = true;
+                        uint32 timer = urand(3000, 7000);
+                        events.ScheduleEvent(EVENT_DRAIN_LIFE, timer, 0, PHASE_NORMAL);
+
+                        if (IsHeroic())
+                        {
+                            events.ScheduleEvent(EVENT_DRAIN_CRYSTAL, urand(10000, 15000), 0, PHASE_NORMAL);
+                            events.ScheduleEvent(EVENT_DRAIN_MANA, timer + 5000, 0, PHASE_NORMAL);
+                        }
+                        else
+                            events.ScheduleEvent(EVENT_DRAIN_CRYSTAL, urand(20000, 25000), 0, PHASE_NORMAL);
+                    }
+                }
+
+                DoMeleeAttackIfReady();
+            }
+
+        private:
+            ObjectGuid CrystalGUID;
+            bool _scheduledEvents;
+        };
+
+        CreatureAI* GetAI(Creature* creature) const override
+        {
+            return GetMagistersTerraceAI<boss_selin_fireheartAI>(creature);
+        };
+};
+
+class npc_fel_crystal : public CreatureScript
+{
+    public:
+        npc_fel_crystal() : CreatureScript("npc_fel_crystal") { }
+
+        struct npc_fel_crystalAI : public ScriptedAI
+        {
+            npc_fel_crystalAI(Creature* creature) : ScriptedAI(creature) { }
+
+            void JustDied(Unit* /*killer*/) override
+            {
+                if (InstanceScript* instance = me->GetInstanceScript())
+                {
+                    Creature* selin = instance->GetCreature(DATA_SELIN_FIREHEART);
+                    if (selin && selin->IsAlive())
+                        selin->AI()->DoAction(ACTION_SWITCH_PHASE);
+                }
+            }
+        };
+
+        CreatureAI* GetAI(Creature* creature) const override
+        {
+            return GetMagistersTerraceAI<npc_fel_crystalAI>(creature);
+        };
 };
 
 void AddSC_boss_selin_fireheart()
 {
     new boss_selin_fireheart();
+    new npc_fel_crystal();
 }

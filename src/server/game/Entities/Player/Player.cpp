@@ -2377,8 +2377,8 @@ void Player::ApplyItemDependentAuras(Item* item, bool apply)
 
 bool Player::CheckAttackFitToAuraRequirement(WeaponAttackType attackType, AuraEffect const* aurEff) const
 {
-/*    if (!HasWand() && !(aurEff->GetMiscValue() & SPELL_SCHOOL_MASK_NORMAL))
-        return false;*/
+   if (!HasWand() && !(aurEff->GetMiscValue() & SPELL_SCHOOL_MASK_NORMAL))
+        return false;
 
     SpellInfo const* spellInfo = aurEff->GetSpellInfo();
     if (spellInfo->EquippedItemClass == -1)
@@ -2740,7 +2740,7 @@ void Player::GiveLevel(uint32 level)
     WorldPacket data(SMSG_LEVELUP_INFO, (4+4+MAX_POWERS*4+MAX_STATS*4));
     data << uint32(level);
     data << uint32(int32(classInfo.basehealth) - int32(GetCreateHealth()));
-    // for(int i = 0; i < MAX_POWERS; ++i)                  // Powers loop (0-6)
+    for(int i = 0; i < MAX_POWERS; ++i)                  // Powers loop (0-6)
     data << uint32(int32(classInfo.basemana)   - int32(GetCreateMana()));
     data << uint32(0);
     data << uint32(0);
@@ -4248,7 +4248,7 @@ void Player::DeleteFromDB(ObjectGuid playerguid, uint32 accountId, bool updateRe
                     uint32 sender = mailFields[3].GetUInt32();
                     std::string subject = mailFields[4].GetString();
                     uint32 itemTextId = mailFields[5].GetUInt32();
-                    //std::string body = mailFields[5].GetString();
+                   // std::string body = mailFields[5].GetString();
                     uint32 money = mailFields[6].GetUInt32();
                     bool has_items = mailFields[7].GetBool();
 
@@ -7211,7 +7211,7 @@ void Player::DuelComplete(DuelCompleteType type)
     }
 
     // cool-down duel spell
-    /*data.Initialize(SMSG_SPELL_COOLDOWN, 17);
+    data.Initialize(SMSG_SPELL_COOLDOWN, 17);
 
     data<<GetGUID();
     data<<uint8(0x0);
@@ -7224,7 +7224,7 @@ void Player::DuelComplete(DuelCompleteType type)
     data<<uint8(0x0);
     data<<(uint32)7266;
     data<<uint32(0x0);
-    duel->Opponent->SendDirectMessage(&data);*/
+    duel->Opponent->SendDirectMessage(&data);
 
 #ifdef LICH_KING
     // Victory emote spell
@@ -8667,12 +8667,12 @@ void Player::SendInitWorldStates(uint32 zoneid, uint32 areaid)
     size_t countPos = data.wpos();
     data << uint16(0);                                      // count of uint64 blocks
     //from mac leak : next fields are called ClientWorldStateInfo
-    /*data << uint32(0x8d8) << uint32(0x0);                   // 1
+    data << uint32(0x8d8) << uint32(0x0);                   // 1
     data << uint32(0x8d7) << uint32(0x0);                   // 2
     data << uint32(0x8d6) << uint32(0x0);                   // 3
     data << uint32(0x8d5) << uint32(0x0);                   // 4
     data << uint32(0x8d4) << uint32(0x0);                   // 5
-    data << uint32(0x8d3) << uint32(0x0);                   // 6*/
+    data << uint32(0x8d3) << uint32(0x0);                   // 6
 #ifdef LICH_KING
                                                             // 7 1 - Arena season in progress, 0 - end of season
     data << uint32(0xC77) << uint32(sWorld->getBoolConfig(CONFIG_ARENA_SEASON_IN_PROGRESS));
@@ -9830,7 +9830,7 @@ InventoryResult Player::_CanStoreItem(uint8 bag, uint8 slot, ItemPosCountVec &de
     }
 
     // Healthstones check
-    /*static uint32 const itypes[6][3] = {
+    static uint32 const itypes[6][3] = {
     { 5512,19004,19005},                        // Minor Healthstone
     { 5511,19006,19007},                        // Lesser Healthstone
     { 5509,19008,19009},                        // Healthstone
@@ -9852,7 +9852,7 @@ InventoryResult Player::_CanStoreItem(uint8 bag, uint8 slot, ItemPosCountVec &de
     return EQUIP_ERR_CANT_CARRY_MORE_OF_THIS;
     }
     }
-    }*/
+    }
 
     // check count of items (skip for auto move for same player from bank)
     uint32 no_similar_count = 0;                            // can't store this amount similar items
@@ -10892,8 +10892,8 @@ InventoryResult Player::CanUseAmmo( uint32 item ) const
 {
     if( !IsAlive() )
         return EQUIP_ERR_YOU_ARE_DEAD;
-    //if( isStunned() )
-    //    return EQUIP_ERR_YOU_ARE_STUNNED;
+   // if( isStunned() )
+        return EQUIP_ERR_YOU_ARE_STUNNED;
     ItemTemplate const *pProto = sObjectMgr->GetItemTemplate( item );
     if( pProto )
     {
@@ -10910,9 +10910,9 @@ InventoryResult Player::CanUseAmmo( uint32 item ) const
         }
         if( pProto->RequiredSpell != 0 && !HasSpell( pProto->RequiredSpell ) )
             return EQUIP_ERR_NO_REQUIRED_PROFICIENCY;
-        /*if( GetReputation() < pProto->RequiredReputation )
+       // if( GetReputation() < pProto->RequiredReputation )
         return EQUIP_ERR_CANT_EQUIP_REPUTATION;
-        */
+        
         if( GetLevel() < pProto->RequiredLevel )
             return EQUIP_ERR_CANT_EQUIP_LEVEL_I;
 
@@ -11214,7 +11214,7 @@ Item* Player::EquipItem(uint16 pos, Item *pItem, bool update, bool interruptSpel
                 pItem2->SendUpdateToPlayer( this );
 
             // delete item (it not in any slot currently)
-            //pItem->DeleteFromDB();
+          //  pItem->DeleteFromDB();
             if( IsInWorld() && update )
             {
                 pItem->RemoveFromWorld();
@@ -12758,32 +12758,32 @@ void Player::ApplyEnchantment(Item *item,EnchantmentSlot slot,bool apply, bool a
                 case ITEM_MOD_CRIT_SPELL_RATING:
                     (this->ToPlayer())->ApplyRatingMod(CR_CRIT_SPELL, enchant_amount, apply);
                     break;
-                    //                    Values from ITEM_STAT_MELEE_HA_RATING to ITEM_MOD_HASTE_RANGED_RATING are never used
-                    //                    in Enchantments
-                    //                    case ITEM_MOD_HIT_TAKEN_MELEE_RATING:
-                    //                        (this->ToPlayer())->ApplyRatingMod(CR_HIT_TAKEN_MELEE, enchant_amount, apply);
-                    //                        break;
-                    //                    case ITEM_MOD_HIT_TAKEN_RANGED_RATING:
-                    //                        (this->ToPlayer())->ApplyRatingMod(CR_HIT_TAKEN_RANGED, enchant_amount, apply);
-                    //                        break;
-                    //                    case ITEM_MOD_HIT_TAKEN_SPELL_RATING:
-                    //                        (this->ToPlayer())->ApplyRatingMod(CR_HIT_TAKEN_SPELL, enchant_amount, apply);
-                    //                        break;
-                    //                    case ITEM_MOD_CRIT_TAKEN_MELEE_RATING:
-                    //                        (this->ToPlayer())->ApplyRatingMod(CR_CRIT_TAKEN_MELEE, enchant_amount, apply);
-                    //                        break;
-                    //                    case ITEM_MOD_CRIT_TAKEN_RANGED_RATING:
-                    //                        (this->ToPlayer())->ApplyRatingMod(CR_CRIT_TAKEN_RANGED, enchant_amount, apply);
-                    //                        break;
-                    //                    case ITEM_MOD_CRIT_TAKEN_SPELL_RATING:
-                    //                        (this->ToPlayer())->ApplyRatingMod(CR_CRIT_TAKEN_SPELL, enchant_amount, apply);
-                    //                        break;
-                    //                    case ITEM_MOD_HASTE_MELEE_RATING:
-                    //                        (this->ToPlayer())->ApplyRatingMod(CR_HASTE_MELEE, enchant_amount, apply);
-                    //                        break;
-                    //                    case ITEM_MOD_HASTE_RANGED_RATING:
-                    //                        (this->ToPlayer())->ApplyRatingMod(CR_HASTE_RANGED, enchant_amount, apply);
-                    //                        break;
+                                      //  Values from ITEM_STAT_MELEE_HA_RATING to ITEM_MOD_HASTE_RANGED_RATING are never used
+                                      // in Enchantments
+                                        case ITEM_MOD_HIT_TAKEN_MELEE_RATING:
+                                            (this->ToPlayer())->ApplyRatingMod(CR_HIT_TAKEN_MELEE, enchant_amount, apply);
+                                            break;
+                                        case ITEM_MOD_HIT_TAKEN_RANGED_RATING:
+                                            (this->ToPlayer())->ApplyRatingMod(CR_HIT_TAKEN_RANGED, enchant_amount, apply);
+                                            break;
+                                        case ITEM_MOD_HIT_TAKEN_SPELL_RATING:
+                                            (this->ToPlayer())->ApplyRatingMod(CR_HIT_TAKEN_SPELL, enchant_amount, apply);
+                                            break;
+                                        case ITEM_MOD_CRIT_TAKEN_MELEE_RATING:
+                                            (this->ToPlayer())->ApplyRatingMod(CR_CRIT_TAKEN_MELEE, enchant_amount, apply);
+                                            break;
+                                        case ITEM_MOD_CRIT_TAKEN_RANGED_RATING:
+                                            (this->ToPlayer())->ApplyRatingMod(CR_CRIT_TAKEN_RANGED, enchant_amount, apply);
+                                            break;
+                                        case ITEM_MOD_CRIT_TAKEN_SPELL_RATING:
+                                            (this->ToPlayer())->ApplyRatingMod(CR_CRIT_TAKEN_SPELL, enchant_amount, apply);
+                                            break;
+                                        case ITEM_MOD_HASTE_MELEE_RATING:
+                                           (this->ToPlayer())->ApplyRatingMod(CR_HASTE_MELEE, enchant_amount, apply);
+                                            break;
+                                        case ITEM_MOD_HASTE_RANGED_RATING:
+                                            (this->ToPlayer())->ApplyRatingMod(CR_HASTE_RANGED, enchant_amount, apply);
+                                            break;
                 case ITEM_MOD_HASTE_SPELL_RATING:
                     (this->ToPlayer())->ApplyRatingMod(CR_HASTE_SPELL, enchant_amount, apply);
                     break;

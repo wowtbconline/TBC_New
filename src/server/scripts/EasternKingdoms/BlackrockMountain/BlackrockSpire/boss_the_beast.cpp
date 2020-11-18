@@ -24,6 +24,7 @@
 #include "Player.h"
 #include "ScriptedCreature.h"
 #include "SpellAuraEffects.h"
+#include "UnitAI.h"
 
 enum BeastSpells
 {

@@ -512,9 +512,9 @@ enum PlayerBytesOffsets : uint8
 enum PlayerBytes2Offsets : uint8
 {
     PLAYER_BYTES_2_OFFSET_FACIAL_STYLE      = 0,
-	//BC OK ?   PLAYER_BYTES_2_OFFSET_PARTY_TYPE        = 1,
-	//BC OK ?   PLAYER_BYTES_2_OFFSET_BANK_BAG_SLOTS    = 2,
-	//BC OK ?   PLAYER_BYTES_2_OFFSET_REST_STATE        = 3
+	PLAYER_BYTES_2_OFFSET_PARTY_TYPE        = 1,
+    PLAYER_BYTES_2_OFFSET_BANK_BAG_SLOTS    = 2,
+    PLAYER_BYTES_2_OFFSET_REST_STATE        = 3
 };
 enum PlayerBytes3Offsets : uint8
 {

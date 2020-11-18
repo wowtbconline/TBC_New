@@ -234,7 +234,7 @@ public:
 
         void JustSummoned(Creature* /*summon*/) override { }
 
-        void SetData(uint32 type, uint32 data, Unit* setter) override
+        void SetData(uint32 type, uint32 data, Unit* setter)
         {
             if ( type == 1 && data == 1)
             {
