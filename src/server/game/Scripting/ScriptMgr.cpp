@@ -9,6 +9,7 @@
 #include "GridNotifiers.h"
 #include "Player.h"
 #include "GossipDef.h"
+#include "InstanceScript.h"
 #include "SpellScript.h"
 #include "ScriptReloadMgr.h"
 #include "SmartAI.h"
