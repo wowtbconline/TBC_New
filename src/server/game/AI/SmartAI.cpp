@@ -11,7 +11,7 @@
 #include "ScriptedCreature.h"
 #include "ScriptMgr.h"
 #include "WaypointManager.h"
-
+#include "GameObject.h"
 #include "SmartAI.h"
 
 SmartAI::SmartAI(Creature* c) : CreatureAI(c), mEscortQuestID(0), mIsCharmed(false), 
