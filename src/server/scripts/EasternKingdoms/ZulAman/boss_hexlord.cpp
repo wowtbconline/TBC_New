@@ -1,6 +1,10 @@
 #include "ScriptMgr.h"
+#include "InstanceScript.h"
+#include "MotionMaster.h"
+#include "ObjectAccessor.h"
 #include "ScriptedCreature.h"
 #include "SpellScript.h"
+#include "TemporarySummon.h"
 #include "SpellAuraEffects.h"
 #include "zulaman.h"
 
@@ -965,7 +969,7 @@ void AddSC_boss_hex_lord_malacrass()
 {
     new boss_hexlord_malacrass();
     new boss_thurg();
-    // new boss_gazakroth();
+    //new boss_gazakroth();
     new boss_lord_raadan();
     new boss_darkheart();
     new boss_slither();

@@ -1,8 +1,12 @@
 #include "ScriptMgr.h"
-#include "ScriptedCreature.h"
-#include "zulaman.h"
-#include "GridNotifiers.h"
 #include "CellImpl.h"
+#include "GridNotifiers.h"
+#include "InstanceScript.h"
+#include "MotionMaster.h"
+#include "ObjectAccessor.h"
+#include "ScriptedCreature.h"
+#include "TemporarySummon.h"
+#include "zulaman.h"
 
 enum Yells
 {

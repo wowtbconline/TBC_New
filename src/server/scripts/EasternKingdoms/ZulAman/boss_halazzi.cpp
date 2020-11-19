@@ -1,4 +1,6 @@
 #include "ScriptMgr.h"
+#include "MotionMaster.h"
+#include "ObjectAccessor.h"
 #include "ScriptedCreature.h"
 #include "zulaman.h"
 #include "SpellInfo.h"

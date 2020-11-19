@@ -23,6 +23,7 @@ enum DataTypes
 enum CreatureIds
 {
     NPC_HARRISON_JONES                  = 24358,
+    NPC_AKILZON                         = 23574,
     NPC_JANALAI                         = 23578,
     NPC_ZULJIN                          = 23863,
     NPC_HEXLORD                         = 24239,
@@ -35,6 +36,7 @@ enum GameobjectIds
     GO_DOOR_HALAZZI                     = 186303,
     GO_GATE_ZULJIN                      = 186304,
     GO_GATE_HEXLORD                     = 186305,
+    GO_WOODEN_DOOR                      = 186306,
     GO_MASSIVE_GATE                     = 186728,
     GO_DOOR_AKILZON                     = 186858,
     GO_DOOR_ZULJIN                      = 186859,

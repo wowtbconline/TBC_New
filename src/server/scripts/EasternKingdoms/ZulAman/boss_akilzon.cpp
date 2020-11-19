@@ -14,8 +14,11 @@ EndScriptData */
 #include "GridNotifiersImpl.h"
 #include "Cell.h"
 #include "CellImpl.h"
-#include "zulaman.h"
+#include "MotionMaster.h"
+#include "ObjectAccessor.h"
+#include "TemporarySummon.h"
 #include "Weather.h"
+#include "zulaman.h"
 
 enum Spells
 {
